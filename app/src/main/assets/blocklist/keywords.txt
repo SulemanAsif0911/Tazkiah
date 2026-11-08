@@ -1,4 +1,7 @@
-# Cyber Tazkiah keyword list.  S = strong (4 pts), M = medium (1 pt).
+# Cyber Tazkiah keyword list.
+# S = strong (4 pts, counted on screen text AND typed text)
+# T = typed-only strong (4 pts, counted only when YOU type/search it; ignored in page text to avoid false alarms)
+# M = medium (1 pt, screen text only)
 # A trailing * means "starts with" (porn* matches pornhub). Otherwise whole word / phrase.
 # Edit freely: one term per line.  Lines starting with # are comments.
 # ---- English ----
@@ -24,44 +27,44 @@ S|tnaflix
 S|hqporner
 S|motherless
 S|rule34
-S|camgirl*
+T|camgirl*
 S|sex video*
-S|sex tape*
+T|sex tape*
 S|sex chat*
 S|sex cam*
-S|sex story
-S|sex stories
-S|free sex
-S|hot sex
+T|sex story
+T|sex stories
+T|free sex
+T|hot sex
 S|desi sex
-S|sexy video*
-S|sexy girl*
-S|nude
-S|nudes
-S|naked
-S|erotic*
-S|milf
-S|blowjob*
-S|handjob*
-S|orgy
-S|masturbat*
-S|threesome
-S|creampie
-S|gangbang
-S|cumshot*
-S|bdsm
-S|pussy
-S|topless
-S|stripper*
-S|strip club
-S|escort girl*
-S|adult video*
-S|adult movie*
-S|leaked mms
-S|mms leak*
-S|nip slip
-S|dick pic*
-S|jerk off
+T|sexy video*
+T|sexy girl*
+T|nude
+T|nudes
+T|naked
+T|erotic*
+T|milf
+T|blowjob*
+T|handjob*
+T|orgy
+T|masturbat*
+T|threesome
+T|creampie
+T|gangbang
+T|cumshot*
+T|bdsm
+T|pussy
+T|topless
+T|stripper*
+T|strip club
+T|escort girl*
+T|adult video*
+T|adult movie*
+T|leaked mms
+T|mms leak*
+T|nip slip
+T|dick pic*
+T|jerk off
 M|sex
 M|sexy
 M|boobs

@@ -16,8 +16,8 @@ final class Blocklist {
     private Blocklist() {}
 
     static final class Term {
-        final String t; final boolean prefix; final int pts;
-        Term(String t, boolean prefix, int pts) { this.t = t; this.prefix = prefix; this.pts = pts; }
+        final String t; final boolean prefix; final int pts; final boolean typedOnly;
+        Term(String t, boolean prefix, int pts, boolean typedOnly) { this.t = t; this.prefix = prefix; this.pts = pts; this.typedOnly = typedOnly; }
     }
 
     private static volatile List<Term> terms;
@@ -38,12 +38,13 @@ final class Blocklist {
         try {
             for (String line : readLines(c, "blocklist/keywords.txt")) {
                 if (line.length() < 3 || line.charAt(0) == '#' || line.charAt(1) != '|') continue;
-                int pts = line.charAt(0) == 'S' ? 4 : 1;
+                int pts = line.charAt(0) == 'M' ? 1 : 4;
+                boolean typedOnly = line.charAt(0) == 'T';
                 String raw = line.substring(2).trim();
                 boolean prefix = raw.endsWith("*");
                 if (prefix) raw = raw.substring(0, raw.length() - 1);
                 String n = norm(raw, false).trim();
-                if (!n.isEmpty()) t.add(new Term(n, prefix, pts));
+                if (!n.isEmpty()) t.add(new Term(n, prefix, pts, typedOnly));
             }
             for (String line : readLines(c, "blocklist/domains.txt")) {
                 line = line.trim().toLowerCase(Locale.ROOT);
@@ -71,7 +72,7 @@ final class Blocklist {
         if (text != null) {
             for (String line : text.split("\\r?\\n")) {
                 String n = norm(line, false).trim();
-                if (n.length() >= 2) t.add(new Term(n, false, 4));
+                if (n.length() >= 2) t.add(new Term(n, false, 4, false));
             }
         }
         custom = t;
@@ -122,15 +123,23 @@ final class Blocklist {
         return padded.contains(needle);
     }
 
-    /** Score of distinct matching terms. 4 = one strong term. Includes the leetspeak pass (use for short text). */
-    static int score(String text) { return score(text, true); }
+    /** Typed / searched text: every tier counts. */
+    static int score(String text) { return score(text, true, true); }
 
-    static int score(String text, boolean leet) {
+    /**
+     * Score of distinct matching terms (4 = one strong term).
+     * typed=false (text read from the screen) ignores the typed-only tier, so ordinary captions,
+     * ads and articles that merely contain a word like "nude" do not trigger.
+     */
+    static int score(String text, boolean leet, boolean typed) {
         if (terms == null || text == null || text.isEmpty()) return 0;
         String a = norm(text, false);
         String b = leet ? norm(text, true) : null;
         int s = 0;
-        for (Term t : terms) if (matches(a, t) || (b != null && matches(b, t))) s += t.pts;
+        for (Term t : terms) {
+            if (t.typedOnly && !typed) continue;
+            if (matches(a, t) || (b != null && matches(b, t))) s += t.pts;
+        }
         for (Term t : custom) if (matches(a, t) || (b != null && matches(b, t))) s += t.pts;
         return s;
     }

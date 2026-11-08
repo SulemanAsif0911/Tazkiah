@@ -116,12 +116,11 @@ public class DnsShieldService extends VpnService {
             resp = DnsUtil.nxdomain(dns);
             blocked = resp != null;
         } else {
-            resp = forward(dns);
-            if (resp != null && Prefs.protection(this) && DnsUtil.isSinkholed(resp)) blocked = true;
+            resp = forward(dns); // resolver-side blocks (ads, trackers, adult) pass through silently
         }
         if (resp == null) return;
         writeUdp(resp, srcIp, srcPort);
-        if (blocked && name != null && firstRecently(name)) TazkiahAccessibilityService.dnsBlocked(this);
+        if (blocked && name != null && firstRecently(name)) Prefs.recordBlock(this, "dns"); // count only: no pop-up from DNS
     }
 
     /** Browsers ask A, AAAA and HTTPS for one page load: count a domain once per 20 seconds. */

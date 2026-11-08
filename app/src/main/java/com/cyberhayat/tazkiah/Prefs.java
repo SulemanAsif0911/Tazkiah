@@ -33,6 +33,9 @@ final class Prefs {
     static String lang(Context c) { return sp(c).getString("lang", "both"); }
     static void setLang(Context c, String v) { sp(c).edit().putString("lang", v).apply(); }
 
+    static boolean visual(Context c) { return sp(c).getBoolean("visual", true); }
+    static void setVisual(Context c, boolean v) { sp(c).edit().putBoolean("visual", v).apply(); }
+
     static boolean guard(Context c) { return sp(c).getBoolean("guard", false); }
     static void setGuard(Context c, boolean v) { sp(c).edit().putBoolean("guard", v).apply(); }
 
@@ -111,7 +114,7 @@ final class Prefs {
             }
             o.put("week", week);
             JSONObject cats = new JSONObject();
-            for (String k : new String[]{"browser", "search", "screen", "dns", "guard"}) cats.put(k, p.getInt("c_" + k, 0));
+            for (String k : new String[]{"browser", "search", "screen", "visual", "dns", "guard"}) cats.put(k, p.getInt("c_" + k, 0));
             o.put("cats", cats);
             return o.toString();
         } catch (Exception e) { return "{}"; }

@@ -242,6 +242,7 @@ public class MainActivity extends Activity {
                 o.put("sensitivity", Prefs.sensitivity(MainActivity.this));
                 o.put("lang", Prefs.lang(MainActivity.this));
                 o.put("guard", Prefs.guard(MainActivity.this));
+                o.put("visual", Prefs.visual(MainActivity.this));
                 o.put("daily", Prefs.daily(MainActivity.this));
                 o.put("dailyHour", Prefs.dailyHour(MainActivity.this));
                 o.put("dailyMin", Prefs.dailyMin(MainActivity.this));
@@ -260,6 +261,7 @@ public class MainActivity extends Activity {
                     case "sensitivity": Prefs.setSensitivity(c, value); break;
                     case "lang": Prefs.setLang(c, value); break;
                     case "guard": Prefs.setGuard(c, "1".equals(value)); break;
+                    case "visual": Prefs.setVisual(c, "1".equals(value)); break;
                     case "daily": Prefs.setDaily(c, "1".equals(value)); ReminderReceiver.schedule(c); break;
                     case "dailyTime": {
                         String[] p = value.split(":");

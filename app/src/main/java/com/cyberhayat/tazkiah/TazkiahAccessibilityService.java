@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.hardware.HardwareBuffer;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
@@ -14,6 +16,7 @@ import android.os.Process;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executor;
 
 /**
  * Layer 1. Notices adult searches / URLs / on-screen text and covers the screen with an ayah or hadith.
@@ -45,6 +49,10 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     private volatile boolean scanPending, guardPending;
     private volatile long cooldownUntil, guardGraceUntil, nextScanAt;
     private volatile String lastPkg = "";
+    private volatile boolean cfgVisual, visualOn, visualBroken;
+    private int textStrikes, visualStrikes;
+    private long visualInterval = 2500;
+    private VisualGuard vg;
     private HandlerThread bgThread;
     private Handler bg;
     private int lastHash;
@@ -117,6 +125,8 @@ public class TazkiahAccessibilityService extends AccessibilityService {
 
     private void stopBg() {
         if (bg != null) { bg.removeCallbacksAndMessages(null); }
+        visualOn = false;
+        if (vg != null) { vg.close(); vg = null; }
         if (bgThread != null) { bgThread.quitSafely(); bgThread = null; bg = null; }
     }
 
@@ -151,6 +161,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         cfgProtection = Prefs.protection(this);
         cfgGuard = Prefs.guard(this);
         cfgSens = Prefs.sensitivity(this);
+        cfgVisual = Prefs.visual(this);
     }
 
     private void reloadTrusted() {
@@ -185,6 +196,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             return;
         }
         if (!cfgProtection || isIgnored(pkg)) return;
+        ensureVisual();
 
         if (type == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
             if (!e.isPassword()) handleTyped(e);
@@ -203,9 +215,9 @@ public class TazkiahAccessibilityService extends AccessibilityService {
 
     private int screenThreshold(boolean browser) {
         String s = cfgSens;
-        if ("gentle".equals(s)) return browser ? 8 : 12;
-        if ("strict".equals(s)) return browser ? 3 : 4;
-        return browser ? 4 : 8;
+        if ("gentle".equals(s)) return 16;
+        if ("strict".equals(s)) return browser ? 4 : 8;
+        return browser ? 8 : 12;
     }
 
     private void handleTyped(AccessibilityEvent e) {
@@ -218,7 +230,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         if (text.length() > 300) text = text.substring(text.length() - 300);
         String host = Blocklist.extractHost(text);
         if (host != null && Blocklist.hostBlocked(host)) { trigger("browser"); return; }
-        if (Blocklist.score(text, true) >= typedThreshold()) trigger("search");
+        if (Blocklist.score(text) >= typedThreshold()) trigger("search");
     }
 
     // ------------------------------------------------------------------ screen scan
@@ -252,9 +264,15 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             collect(root, sb, new int[]{0}, 0);
             String text = sb.toString();
             int hash = text.hashCode();
-            if (hash == lastHash && pkg.equals(lastHashPkg)) return; // nothing new on screen since the last scan
+            if (hash == lastHash && pkg.equals(lastHashPkg) && textStrikes == 0) return; // nothing new since the last scan
             lastHash = hash; lastHashPkg = pkg;
-            if (Blocklist.score(text, false) >= screenThreshold(browser)) trigger(browser ? "browser" : "screen");
+            int thr = screenThreshold(browser), sc = Blocklist.score(text, false, false);
+            if (sc >= thr) {
+                // one odd frame is not enough: ordinary apps must show it in two scans in a row
+                if (browser || sc >= thr + 8 || ++textStrikes >= 2) { textStrikes = 0; trigger(browser ? "browser" : "screen"); }
+            } else {
+                textStrikes = 0;
+            }
         } finally {
             try { root.recycle(); } catch (Exception ignored) { }
         }
@@ -320,20 +338,72 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         });
     }
 
-    /** Called by DnsShieldService (any thread) when a blocked domain was looked up. */
-    static void dnsBlocked(final Context ctx) {
-        final TazkiahAccessibilityService s = instance;
-        if (s == null) { Prefs.recordBlock(ctx, "dns"); return; }
-        s.h.post(new Runnable() { @Override public void run() { s.onDns(); } });
+    // ------------------------------------------------------------------ image guard (Android 11+)
+    private final Executor bgExec = new Executor() {
+        @Override public void execute(Runnable r) { Handler x = bg; if (x != null) x.post(r); }
+    };
+    private final Runnable visualRunnable = new Runnable() { @Override public void run() { visualTick(); } };
+
+    private boolean visualEligible() {
+        if (Build.VERSION.SDK_INT < 30 || visualBroken || !cfgVisual || !cfgProtection || overlay != null) return false;
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (pm != null && !pm.isInteractive()) return false;
+        return !isIgnored(lastPkg);
     }
 
-    private void onDns() {
-        if (overlay != null || SystemClock.elapsedRealtime() < cooldownUntil) return;
-        Prefs.recordBlock(this, "dns");
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        boolean awake = pm == null || pm.isInteractive();
-        if (!awake || isIgnored(lastPkg)) return; // counted silently
-        showOverlay(false, Reminder.pick(this, false));
+    private void ensureVisual() {
+        if (visualOn || bg == null || Build.VERSION.SDK_INT < 30 || visualBroken || !cfgVisual) return;
+        visualOn = true;
+        bg.postDelayed(visualRunnable, 1500);
+    }
+
+    private void nextVisual(long delay) {
+        Handler x = bg;
+        if (x == null) { visualOn = false; return; }
+        x.postDelayed(visualRunnable, delay);
+    }
+
+    /** Runs on the background thread: one screenshot -> small model -> maybe block. */
+    private void visualTick() {
+        if (!visualEligible()) { visualOn = false; return; }
+        if (SystemClock.elapsedRealtime() < cooldownUntil) { nextVisual(1500); return; }
+        try {
+            takeScreenshot(Display.DEFAULT_DISPLAY, bgExec, new TakeScreenshotCallback() {
+                @Override public void onSuccess(ScreenshotResult r) {
+                    long t0 = SystemClock.elapsedRealtime();
+                    Bitmap sw = null;
+                    try {
+                        HardwareBuffer hb = r.getHardwareBuffer();
+                        Bitmap hw = Bitmap.wrapHardwareBuffer(hb, r.getColorSpace());
+                        if (hw != null) { sw = hw.copy(Bitmap.Config.ARGB_8888, false); hw.recycle(); }
+                        hb.close();
+                    } catch (Throwable ignored) { }
+                    if (sw != null) {
+                        try { if (overlay == null) evaluateVisual(sw); } catch (Throwable ignored) { }
+                        sw.recycle();
+                    }
+                    long took = SystemClock.elapsedRealtime() - t0;
+                    visualInterval = Math.max(2500, took * 8); // heavy device -> look less often
+                    nextVisual(visualInterval);
+                }
+                @Override public void onFailure(int errorCode) { nextVisual(4000); }
+            });
+        } catch (Throwable t) {
+            nextVisual(6000);
+        }
+    }
+
+    private void evaluateVisual(Bitmap sw) {
+        if (vg == null) vg = new VisualGuard();
+        if (!vg.load(this)) { visualBroken = true; return; }
+        boolean strict = "strict".equals(cfgSens), gentle = "gentle".equals(cfgSens);
+        float sc = vg.analyze(sw, strict);
+        if (sc < 0) return; // unchanged screen
+        float hi = gentle ? 0.75f : strict ? 0.55f : 0.65f;
+        float lo = gentle ? 0.75f : strict ? 0.35f : 0.45f;
+        if (sc >= hi) { visualStrikes = 0; trigger("visual"); }
+        else if (sc >= lo) { if (++visualStrikes >= 2) { visualStrikes = 0; trigger("visual"); } }
+        else visualStrikes = 0;
     }
 
     // ------------------------------------------------------------------ overlay
