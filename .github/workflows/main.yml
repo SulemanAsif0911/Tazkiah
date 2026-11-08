@@ -1,0 +1,79 @@
+name: Build Cyber Tazkiah APK
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # only needed to attach the APK to a GitHub Release when you push a v* tag
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Accept Android SDK licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+
+      - name: Check required files
+        run: |
+          for f in tazkiah-app/index.html tazkiah-app/app.js tazkiah-app/app.css \
+                   app/src/main/assets/data/reminders.json \
+                   app/src/main/assets/blocklist/keywords.txt \
+                   app/src/main/assets/blocklist/domains.txt \
+                   app/cybertazkiah.jks; do
+            test -f "$f" || { echo "ERROR: $f is missing from the repo"; exit 1; }
+          done
+          python3 - <<'PY'
+          import json
+          d = json.load(open("app/src/main/assets/data/reminders.json", encoding="utf-8"))
+          items = d["items"]
+          assert items, "reminders.json has no items"
+          for r in items:
+              for k in ("id", "type", "ar", "ur", "en", "ref", "hook_ur", "hook_en"):
+                  assert r.get(k, "").strip(), f"{r.get('id')}: missing {k}"
+          print(f"reminders.json OK: {len(items)} reminders")
+          PY
+
+      - name: Copy web app into Android assets
+        run: |
+          rm -rf app/src/main/assets/www
+          mkdir -p app/src/main/assets/www
+          rsync -a tazkiah-app/ app/src/main/assets/www/
+          echo "Files copied: $(find app/src/main/assets/www -type f | wc -l)"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+
+      - name: Build APK
+        run: gradle :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Name the APK
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/release/*.apk dist/CyberTazkiah.apk
+          ls -lh dist
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cyber-Tazkiah-APK
+          path: dist/CyberTazkiah.apk
+
+      - name: Attach APK to release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/CyberTazkiah.apk
