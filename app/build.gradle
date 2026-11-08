@@ -1,0 +1,49 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.cyberhayat.tazkiah'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.cyberhayat.tazkiah'
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        main {
+            storeFile file('cybertazkiah.jks')
+            storePassword 'tazkiah123'
+            keyAlias 'cybertazkiah'
+            keyPassword 'tazkiah123'
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.main
+            minifyEnabled false
+        }
+        debug {
+            signingConfig signingConfigs.main
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.11.0'
+}

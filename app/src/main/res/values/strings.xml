@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cyber Tazkiah</string>
+    <string name="accessibility_description">Cyber Tazkiah reads on-screen text on this device only to notice searches and pages with adult content, then shows an ayah or hadith reminder and takes you back. Nothing is stored or sent anywhere. It never reads passwords.</string>
+    <string name="admin_explanation">Activating this makes Cyber Tazkiah harder to uninstall by accident or in a weak moment. You can deactivate it later in Settings.</string>
+    <string name="admin_disable_warning">If you deactivate this, Cyber Tazkiah can be uninstalled easily. Remember: “Does he not know that Allah sees?” (96:14)</string>
+    <string name="notif_channel">Daily Tazkiah reminder</string>
+</resources>

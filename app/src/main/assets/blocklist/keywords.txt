@@ -1,0 +1,120 @@
+# Cyber Tazkiah keyword list.  S = strong (4 pts), M = medium (1 pt).
+# A trailing * means "starts with" (porn* matches pornhub). Otherwise whole word / phrase.
+# Edit freely: one term per line.  Lines starting with # are comments.
+# ---- English ----
+S|porn*
+S|xxx
+S|hentai*
+S|nsfw
+S|onlyfans
+S|chaturbate
+S|stripchat
+S|bongacams
+S|livejasmin
+S|spankbang
+S|xvideos
+S|xvideo
+S|xnxx
+S|xhamster
+S|redtube
+S|youporn
+S|brazzers
+S|eporner
+S|tnaflix
+S|hqporner
+S|motherless
+S|rule34
+S|camgirl*
+S|sex video*
+S|sex tape*
+S|sex chat*
+S|sex cam*
+S|sex story
+S|sex stories
+S|free sex
+S|hot sex
+S|desi sex
+S|sexy video*
+S|sexy girl*
+S|nude
+S|nudes
+S|naked
+S|erotic*
+S|milf
+S|blowjob*
+S|handjob*
+S|orgy
+S|masturbat*
+S|threesome
+S|creampie
+S|gangbang
+S|cumshot*
+S|bdsm
+S|pussy
+S|topless
+S|stripper*
+S|strip club
+S|escort girl*
+S|adult video*
+S|adult movie*
+S|leaked mms
+S|mms leak*
+S|nip slip
+S|dick pic*
+S|jerk off
+M|sex
+M|sexy
+M|boobs
+M|lingerie
+M|fetish*
+M|fap
+M|hot girl*
+M|hot video*
+M|bikini girl*
+M|18+
+M|adult content
+M|escort*
+M|hookup
+M|hook up
+M|onlyfans leak*
+# ---- Roman Urdu / Hindi ----
+S|nangi
+S|nanga video*
+S|chudai
+S|chodai
+S|blue film*
+S|bf film*
+S|mms video*
+S|desi bhabhi
+S|bhabhi sex
+S|gandi video*
+S|gandi film*
+S|sexy kahani*
+M|randi
+M|garam video*
+M|garam girl*
+# ---- Urdu / Arabic / Persian script ----
+S|سیکس
+S|سيكس
+S|سكس
+S|سیکسی
+S|پورن
+S|پورنو
+S|بورن
+S|ننگی
+S|ننگی ویڈیو
+S|چدائی
+S|اباحي
+S|اباحيه
+S|افلام اباحيه
+S|افلام سكس
+S|نيك
+M|ننگا
+M|فحش
+M|عاريه
+M|عاري
+# ---- Hindi (Devanagari) ----
+S|सेक्स
+S|पोर्न
+S|नंगी
+S|चुदाई

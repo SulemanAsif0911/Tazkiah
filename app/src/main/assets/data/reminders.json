@@ -1,0 +1,700 @@
+{
+ "version": 1,
+ "items": [
+  {
+   "id": "q96-14",
+   "type": "ayah",
+   "cats": [
+    "allah_sees"
+   ],
+   "ar": "أَلَمۡ يَعۡلَم بِأَنَّ ٱللَّهَ يَرَىٰ",
+   "ur": "کیا وہ نہیں جانتا کہ اللہ دیکھ رہا ہے؟",
+   "en": "Does he not know that Allah sees",
+   "ref": "Surah Al-Alaq 96:14",
+   "grade": "Qur'an",
+   "hook_ur": "ایک لمحے کو سوچئے: جو آپ دیکھ رہے ہیں، اللہ بھی آپ کو دیکھ رہا ہے۔",
+   "hook_en": "For a moment, think: whatever you are looking at, Allah is looking at you."
+  },
+  {
+   "id": "q40-19",
+   "type": "ayah",
+   "cats": [
+    "gaze",
+    "allah_sees"
+   ],
+   "ar": "يَعۡلَمُ خَآئِنَةَ ٱلۡأَعۡيُنِ وَمَا تُخۡفِي ٱلصُّدُورُ",
+   "ur": "اللہ نگاہوں کی چوری تک سے واقف ہے اور وہ راز تک جانتا ہے جو سینوں نے چھپا رکھے ہیں",
+   "en": "He knows that which deceives the eyes and what the breasts conceal",
+   "ref": "Surah Ghafir 40:19",
+   "grade": "Qur'an",
+   "hook_ur": "نگاہوں کی چوری بھی اللہ سے چھپی نہیں — تنہائی میں بھی نہیں۔",
+   "hook_en": "Even the stolen glance is known to Allah — even when you are alone."
+  },
+  {
+   "id": "q24-30",
+   "type": "ayah",
+   "cats": [
+    "gaze"
+   ],
+   "ar": "قُل لِّلۡمُؤۡمِنِينَ يَغُضُّواْ مِنۡ أَبۡصَٰرِهِمۡ وَيَحۡفَظُواْ فُرُوجَهُمۡۚ ذَٰلِكَ أَزۡكَىٰ لَهُمۡۚ إِنَّ ٱللَّهَ خَبِيرُۢ بِمَا يَصۡنَعُونَ",
+   "ur": "اے نبیؐ، مومن مردوں سے کہو کہ اپنی نظریں بچا کر رکھیں اور اپنی شرمگاہوں کی حفاظت کریں، یہ اُن کے لیے زیادہ پاکیزہ طریقہ ہے، جو کچھ وہ کرتے ہیں اللہ اُس سے باخبر رہتا ہے",
+   "en": "Tell the believing men to reduce [some] of their vision and guard their private parts. That is purer for them. Indeed, Allah is Acquainted with what they do",
+   "ref": "Surah An-Nur 24:30",
+   "grade": "Qur'an",
+   "hook_ur": "نظر جھکانا کمزوری نہیں، مردانگی ہے۔ اپنی نگاہ کو لوٹا لیجئے۔",
+   "hook_en": "Lowering the gaze is not weakness — it is strength. Turn your eyes back."
+  },
+  {
+   "id": "q24-31a",
+   "type": "ayah",
+   "cats": [
+    "gaze"
+   ],
+   "ar": "وَقُل لِّلۡمُؤۡمِنَٰتِ يَغۡضُضۡنَ مِنۡ أَبۡصَٰرِهِنَّ وَيَحۡفَظۡنَ فُرُوجَهُنَّ …",
+   "ur": "اور اے نبیؐ، مومن عورتوں سے کہہ دو کہ اپنی نظریں بچا کر رکھیں، اور اپنی شرمگاہوں کی حفاظت کریں …",
+   "en": "And tell the believing women to reduce [some] of their vision and guard their private parts …",
+   "ref": "Surah An-Nur 24:31",
+   "grade": "Qur'an",
+   "hook_ur": "نگاہ کی حفاظت ہر مومن مرد اور عورت پر ہے۔ ابھی نظریں ہٹا لیجئے۔",
+   "hook_en": "Guarding the gaze is for every believer. Look away right now."
+  },
+  {
+   "id": "q17-32",
+   "type": "ayah",
+   "cats": [
+    "fitna"
+   ],
+   "ar": "وَلَا تَقۡرَبُواْ ٱلزِّنَىٰٓۖ إِنَّهُۥ كَانَ فَٰحِشَةٗ وَسَآءَ سَبِيلٗا",
+   "ur": "زنا کے قریب نہ پھٹکو وہ بہت برا فعل ہے اور بڑا ہی برا راستہ",
+   "en": "And do not approach unlawful sexual intercourse. Indeed, it is ever an immorality and is evil as a way",
+   "ref": "Surah Al-Isra 17:32",
+   "grade": "Qur'an",
+   "hook_ur": "قرآن صرف زنا سے نہیں، اس کے قریب جانے سے بھی روکتا ہے۔ یہیں رک جائیے۔",
+   "hook_en": "The Qur'an forbids even approaching zina. Stop right here."
+  },
+  {
+   "id": "q50-16",
+   "type": "ayah",
+   "cats": [
+    "allah_sees"
+   ],
+   "ar": "وَلَقَدۡ خَلَقۡنَا ٱلۡإِنسَٰنَ وَنَعۡلَمُ مَا تُوَسۡوِسُ بِهِۦ نَفۡسُهُۥۖ وَنَحۡنُ أَقۡرَبُ إِلَيۡهِ مِنۡ حَبۡلِ ٱلۡوَرِيدِ",
+   "ur": "ہم نے انسان کو پیدا کیا ہے اور اس کے دل میں ابھرنے والے وسوسوں تک کو ہم جانتے ہیں ہم اس کی رگ گردن سے بھی زیادہ اُس سے قریب ہیں",
+   "en": "And We have already created man and know what his soul whispers to him, and We are closer to him than [his] jugular vein",
+   "ref": "Surah Qaf 50:16",
+   "grade": "Qur'an",
+   "hook_ur": "وہ آپ کی رگِ جان سے بھی زیادہ قریب ہے — آپ اس سے چھپ کر کہاں جائیں گے؟",
+   "hook_en": "He is nearer than your jugular vein — where can you hide from Him?"
+  },
+  {
+   "id": "q50-18",
+   "type": "ayah",
+   "cats": [
+    "allah_sees",
+    "hereafter"
+   ],
+   "ar": "مَّا يَلۡفِظُ مِن قَوۡلٍ إِلَّا لَدَيۡهِ رَقِيبٌ عَتِيدٞ",
+   "ur": "کوئی لفظ اس کی زبان سے نہیں نکلتا جسے محفوظ کرنے کے لیے ایک حاضر باش نگراں موجود نہ ہو",
+   "en": "Man does not utter any word except that with him is an observer prepared [to record]",
+   "ref": "Surah Qaf 50:18",
+   "grade": "Qur'an",
+   "hook_ur": "ہر لفظ ریکارڈ ہوتا ہے، اور فرشتے آپ کا ہر عمل جانتے ہیں۔",
+   "hook_en": "Every word is recorded, and the angels know everything you do."
+  },
+  {
+   "id": "q82-10-12",
+   "type": "ayah",
+   "cats": [
+    "allah_sees",
+    "hereafter"
+   ],
+   "ar": "وَإِنَّ عَلَيۡكُمۡ لَحَٰفِظِينَ كِرَامٗا كَٰتِبِينَ يَعۡلَمُونَ مَا تَفۡعَلُونَ",
+   "ur": "حالانکہ تم پر نگراں مقرر ہیں ایسے معزز کاتب جو تمہارے ہر فعل کو جانتے ہیں",
+   "en": "And indeed, [appointed] over you are keepers Noble and recording They know whatever you do",
+   "ref": "Surah Al-Infitar 82:10–12",
+   "grade": "Qur'an",
+   "hook_ur": "دو معزز فرشتے ابھی لکھ رہے ہیں۔ کیا آپ چاہتے ہیں یہ بھی لکھا جائے؟",
+   "hook_en": "Two noble angels are recording right now. Do you want this written down?"
+  },
+  {
+   "id": "q41-22",
+   "type": "ayah",
+   "cats": [
+    "hereafter",
+    "allah_sees",
+    "gaze"
+   ],
+   "ar": "وَمَا كُنتُمۡ تَسۡتَتِرُونَ أَن يَشۡهَدَ عَلَيۡكُمۡ سَمۡعُكُمۡ وَلَآ أَبۡصَٰرُكُمۡ وَلَا جُلُودُكُمۡ وَلَٰكِن ظَنَنتُمۡ أَنَّ ٱللَّهَ لَا يَعۡلَمُ كَثِيرٗا مِّمَّا تَعۡمَلُونَ",
+   "ur": "تم دنیا میں جرائم کرتے وقت جب چھپتے تھے تو تمہیں یہ خیال نہ تھا کہ کبھی تمہارے اپنے کان اور تمہاری آنکھیں اور تمہارے جسم کی کھالیں تم پر گواہی دیں گی بلکہ تم نے تو یہ سمجھا تھا کہ تمہارے بہت سے اعمال کی اللہ کو بھی خبر نہیں ہے",
+   "en": "And you were not covering yourselves, lest your hearing testify against you or your sight or your skins, but you assumed that Allah does not know much of what you do",
+   "ref": "Surah Fussilat 41:22",
+   "grade": "Qur'an",
+   "hook_ur": "جن آنکھوں سے آپ دیکھ رہے ہیں، وہی کل گواہی دیں گی۔",
+   "hook_en": "The very eyes you are using will testify against you tomorrow."
+  },
+  {
+   "id": "q36-65",
+   "type": "ayah",
+   "cats": [
+    "hereafter"
+   ],
+   "ar": "ٱلۡيَوۡمَ نَخۡتِمُ عَلَىٰٓ أَفۡوَٰهِهِمۡ وَتُكَلِّمُنَآ أَيۡدِيهِمۡ وَتَشۡهَدُ أَرۡجُلُهُم بِمَا كَانُواْ يَكۡسِبُونَ",
+   "ur": "آج ہم اِن کے منہ بند کیے دیتے ہیں، اِن کے ہاتھ ہم سے بولیں گے اور ان کے پاؤں گواہی دیں گے کہ یہ دنیا میں کیا کمائی کرتے رہے ہیں",
+   "en": "That Day, We will seal over their mouths, and their hands will speak to Us, and their feet will testify about what they used to earn",
+   "ref": "Surah Ya-Sin 36:65",
+   "grade": "Qur'an",
+   "hook_ur": "آج یہ ہاتھ اسکرین پر ہے؛ کل یہی ہاتھ اللہ کے سامنے بولے گا۔",
+   "hook_en": "These hands on the screen today will speak before Allah tomorrow."
+  },
+  {
+   "id": "q17-36",
+   "type": "ayah",
+   "cats": [
+    "gaze",
+    "hereafter"
+   ],
+   "ar": "وَلَا تَقۡفُ مَا لَيۡسَ لَكَ بِهِۦ عِلۡمٌۚ إِنَّ ٱلسَّمۡعَ وَٱلۡبَصَرَ وَٱلۡفُؤَادَ كُلُّ أُوْلَـٰٓئِكَ كَانَ عَنۡهُ مَسۡـُٔولٗا",
+   "ur": "کسی ایسی چیز کے پیچھے نہ لگو جس کا تمہیں علم نہ ہو یقیناً آنکھ، کان اور دل سب ہی کی باز پرس ہونی ہے",
+   "en": "And do not pursue that of which you have no knowledge. Indeed, the hearing, the sight and the heart - about all those [one] will be questioned",
+   "ref": "Surah Al-Isra 17:36",
+   "grade": "Qur'an",
+   "hook_ur": "آنکھ، کان اور دل — تینوں سے پوچھ ہوگی۔",
+   "hook_en": "Eyes, ears and heart — each will be questioned."
+  },
+  {
+   "id": "q24-21a",
+   "type": "ayah",
+   "cats": [
+    "fitna"
+   ],
+   "ar": "يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ لَا تَتَّبِعُواْ خُطُوَٰتِ ٱلشَّيۡطَٰنِۚ وَمَن يَتَّبِعۡ خُطُوَٰتِ ٱلشَّيۡطَٰنِ فَإِنَّهُۥ يَأۡمُرُ بِٱلۡفَحۡشَآءِ وَٱلۡمُنكَرِۚ …",
+   "ur": "اے لوگو جو ایمان لائے ہو، شیطان کے نقش قدم پر نہ چلو اس کی پیروی کوئی کرے گا تو وہ اسے فحش اور بدی ہی کا حکم دے گا …",
+   "en": "O you who have believed, do not follow the footsteps of Satan. And whoever follows the footsteps of Satan - indeed, he enjoins immorality and wrongdoing. …",
+   "ref": "Surah An-Nur 24:21",
+   "grade": "Qur'an",
+   "hook_ur": "یہ شیطان کا قدم ہے۔ اگلا قدم مت اٹھائیے۔",
+   "hook_en": "This is a step of Shaytan. Do not take the next one."
+  },
+  {
+   "id": "q2-268",
+   "type": "ayah",
+   "cats": [
+    "fitna"
+   ],
+   "ar": "ٱلشَّيۡطَٰنُ يَعِدُكُمُ ٱلۡفَقۡرَ وَيَأۡمُرُكُم بِٱلۡفَحۡشَآءِۖ وَٱللَّهُ يَعِدُكُم مَّغۡفِرَةٗ مِّنۡهُ وَفَضۡلٗاۗ وَٱللَّهُ وَٰسِعٌ عَلِيمٞ",
+   "ur": "شیطان تمہیں مفلسی سے ڈراتا ہے اور شرمناک طرز عمل اختیار کرنے کی ترغیب دیتا ہے، مگر اللہ تمہیں اپنی بخشش اور فضل کی امید دلاتا ہے اللہ بڑا فراخ دست اور دانا ہے",
+   "en": "Satan threatens you with poverty and orders you to immorality, while Allah promises you forgiveness from Him and bounty. And Allah is all-Encompassing and Knowing",
+   "ref": "Surah Al-Baqarah 2:268",
+   "grade": "Qur'an",
+   "hook_ur": "شیطان بے حیائی کا حکم دیتا ہے، اللہ بخشش کا وعدہ۔ آپ کس کی بات مانیں گے؟",
+   "hook_en": "Shaytan commands indecency; Allah promises forgiveness. Whom will you listen to?"
+  },
+  {
+   "id": "q7-201",
+   "type": "ayah",
+   "cats": [
+    "heart",
+    "fitna"
+   ],
+   "ar": "إِنَّ ٱلَّذِينَ ٱتَّقَوۡاْ إِذَا مَسَّهُمۡ طَـٰٓئِفٞ مِّنَ ٱلشَّيۡطَٰنِ تَذَكَّرُواْ فَإِذَا هُم مُّبۡصِرُونَ",
+   "ur": "حقیقت میں جو لو گ متقی ہیں اُن کا حال تو یہ ہوتا ہے کہ کبھی شیطان کے اثر سے کوئی برا خیال اگر انہیں چھو بھی جاتا ہے تو وہ فوراً چوکنے ہو جاتے ہیں اور پھر انہیں صاف نظر آنے لگتا ہے کہ ان کے لیے صحیح طریق کار کیا ہے",
+   "en": "Indeed, those who fear Allah - when an impulse touches them from Satan, they remember [Him] and at once they have insight",
+   "ref": "Surah Al-A'raf 7:201",
+   "grade": "Qur'an",
+   "hook_ur": "برا خیال آنا گناہ نہیں؛ اللہ کو یاد کر لینا ہی تقویٰ ہے۔ ابھی اللہ کو یاد کیجئے۔",
+   "hook_en": "A passing thought is not a sin; remembering Allah is taqwa. Remember Him now."
+  },
+  {
+   "id": "q79-40-41",
+   "type": "ayah",
+   "cats": [
+    "hereafter",
+    "fitna",
+    "remedy"
+   ],
+   "ar": "وَأَمَّا مَنۡ خَافَ مَقَامَ رَبِّهِۦ وَنَهَى ٱلنَّفۡسَ عَنِ ٱلۡهَوَىٰ فَإِنَّ ٱلۡجَنَّةَ هِيَ ٱلۡمَأۡوَىٰ",
+   "ur": "اور جس نے اپنے رب کے سامنے کھڑے ہونے کا خوف کیا تھا اور نفس کو بری خواہشات سے باز رکھا تھا جنت اس کا ٹھکانا ہوگی",
+   "en": "But as for he who feared the position of his Lord and prevented the soul from [unlawful] inclination Then indeed, Paradise will be [his] refuge",
+   "ref": "Surah An-Nazi'at 79:40–41",
+   "grade": "Qur'an",
+   "hook_ur": "نفس کو روک لینے کا انعام جنت ہے — اس ایک لمحے کی قیمت جنت ہے۔",
+   "hook_en": "The reward for holding back the self is Paradise — this very moment is worth Paradise."
+  },
+  {
+   "id": "q55-46",
+   "type": "ayah",
+   "cats": [
+    "hereafter",
+    "remedy"
+   ],
+   "ar": "وَلِمَنۡ خَافَ مَقَامَ رَبِّهِۦ جَنَّتَانِ",
+   "ur": "اور ہر اُس شخص کے لیے جو اپنے رب کے حضور پیش ہونے کا خوف رکھتا ہو، دو باغ ہیں",
+   "en": "But for he who has feared the position of his Lord are two gardens",
+   "ref": "Surah Ar-Rahman 55:46",
+   "grade": "Qur'an",
+   "hook_ur": "جو اپنے رب کے سامنے کھڑے ہونے سے ڈرا، اس کے لیے دو باغ ہیں۔",
+   "hook_en": "For the one who fears standing before his Lord, there are two gardens."
+  },
+  {
+   "id": "q3-135",
+   "type": "ayah",
+   "cats": [
+    "tawbah"
+   ],
+   "ar": "وَٱلَّذِينَ إِذَا فَعَلُواْ فَٰحِشَةً أَوۡ ظَلَمُوٓاْ أَنفُسَهُمۡ ذَكَرُواْ ٱللَّهَ فَٱسۡتَغۡفَرُواْ لِذُنُوبِهِمۡ وَمَن يَغۡفِرُ ٱلذُّنُوبَ إِلَّا ٱللَّهُ وَلَمۡ يُصِرُّواْ عَلَىٰ مَا فَعَلُواْ وَهُمۡ يَعۡلَمُونَ",
+   "ur": "اور جن کا حال یہ ہے کہ اگر کبھی کوئی فحش کام ان سے سرزد ہو جاتا ہے یا کسی گناہ کا ارتکاب کر کے وہ اپنے اوپر ظلم کر بیٹھتے ہیں تو معاً اللہ انہیں یاد آ جاتا ہے اور اس سے وہ اپنے قصوروں کی معافی چاہتے ہیں کیونکہ اللہ کے سوا اور کون ہے جو گناہ معاف کرسکتا ہو او ر وہ دیدہ و دانستہ اپنے کیے پر اصرار نہیں کرتے",
+   "en": "And those who, when they commit an immorality or wrong themselves [by transgression], remember Allah and seek forgiveness for their sins - and who can forgive sins except Allah? - and [who] do not persist in what they have done while they know",
+   "ref": "Surah Aal-Imran 3:135",
+   "grade": "Qur'an",
+   "hook_ur": "گرنا مسئلہ نہیں، اصرار مسئلہ ہے۔ ابھی رک جائیے اور استغفار کیجئے۔",
+   "hook_en": "Falling is not the problem; persisting is. Stop now and seek forgiveness."
+  },
+  {
+   "id": "q39-53",
+   "type": "ayah",
+   "cats": [
+    "tawbah"
+   ],
+   "ar": "قُلۡ يَٰعِبَادِيَ ٱلَّذِينَ أَسۡرَفُواْ عَلَىٰٓ أَنفُسِهِمۡ لَا تَقۡنَطُواْ مِن رَّحۡمَةِ ٱللَّهِۚ إِنَّ ٱللَّهَ يَغۡفِرُ ٱلذُّنُوبَ جَمِيعًاۚ إِنَّهُۥ هُوَ ٱلۡغَفُورُ ٱلرَّحِيمُ",
+   "ur": "(اے نبیؐ) کہہ دو کہ اے میرے بندو، جنہوں نے اپنی جانوں پر زیادتی کی ہے، اللہ کی رحمت سے مایوس نہ ہو جاؤ، یقیناً اللہ سارے گناہ معاف کر دیتا ہے، وہ تو غفور و رحیم ہے",
+   "en": "Say, \"O My servants who have transgressed against themselves [by sinning], do not despair of the mercy of Allah. Indeed, Allah forgives all sins. Indeed, it is He who is the Forgiving, the Merciful",
+   "ref": "Surah Az-Zumar 39:53",
+   "grade": "Qur'an",
+   "hook_ur": "اگر گر بھی گئے ہیں تو اللہ کی رحمت سے مایوس نہ ہوں — لوٹ آئیے۔",
+   "hook_en": "Even if you have fallen, do not despair of Allah's mercy — come back."
+  },
+  {
+   "id": "q66-8a",
+   "type": "ayah",
+   "cats": [
+    "tawbah"
+   ],
+   "ar": "يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ تُوبُوٓاْ إِلَى ٱللَّهِ تَوۡبَةٗ نَّصُوحًا عَسَىٰ رَبُّكُمۡ أَن يُكَفِّرَ عَنكُمۡ سَيِّـَٔاتِكُمۡ وَيُدۡخِلَكُمۡ جَنَّـٰتٖ تَجۡرِي مِن تَحۡتِهَا ٱلۡأَنۡهَٰرُ …",
+   "ur": "اے لوگو جو ایمان لائے ہو، اللہ سے توبہ کرو، خالص توبہ، بعید نہیں کہ اللہ تمہاری برائیاں تم سے دور کر دے اور تمہیں ایسی جنتوں میں داخل فرما دے جن کے نیچے نہریں بہہ رہی ہوں گی …",
+   "en": "O you who have believed, repent to Allah with sincere repentance. Perhaps your Lord will remove from you your misdeeds and admit you into gardens beneath which rivers flow …",
+   "ref": "Surah At-Tahrim 66:8",
+   "grade": "Qur'an",
+   "hook_ur": "توبہ کا دروازہ ابھی کھلا ہے۔ خالص توبہ کیجئے۔",
+   "hook_en": "The door of tawbah is open right now. Make sincere repentance."
+  },
+  {
+   "id": "q25-70",
+   "type": "ayah",
+   "cats": [
+    "tawbah"
+   ],
+   "ar": "إِلَّا مَن تَابَ وَءَامَنَ وَعَمِلَ عَمَلٗا صَٰلِحٗا فَأُوْلَـٰٓئِكَ يُبَدِّلُ ٱللَّهُ سَيِّـَٔاتِهِمۡ حَسَنَٰتٖۗ وَكَانَ ٱللَّهُ غَفُورٗا رَّحِيمٗا",
+   "ur": "اِلّا یہ کہ کوئی (ان گناہوں کے بعد) توبہ کر چکا ہو اور ایمان لا کر عمل صالح کرنے لگا ہو ایسے لوگوں کی برائیوں کو اللہ بھلائیوں سے بدل دے گا اور وہ بڑا غفور رحیم ہے",
+   "en": "Except for those who repent, believe and do righteous work. For them Allah will replace their evil deeds with good. And ever is Allah Forgiving and Merciful",
+   "ref": "Surah Al-Furqan 25:70",
+   "grade": "Qur'an",
+   "hook_ur": "اللہ توبہ کرنے والوں کی برائیوں کو نیکیوں میں بدل دیتا ہے۔",
+   "hook_en": "Allah turns the evil deeds of the repentant into good deeds."
+  },
+  {
+   "id": "q4-27-28",
+   "type": "ayah",
+   "cats": [
+    "tawbah",
+    "fitna"
+   ],
+   "ar": "وَٱللَّهُ يُرِيدُ أَن يَتُوبَ عَلَيۡكُمۡ وَيُرِيدُ ٱلَّذِينَ يَتَّبِعُونَ ٱلشَّهَوَٰتِ أَن تَمِيلُواْ مَيۡلًا عَظِيمٗا يُرِيدُ ٱللَّهُ أَن يُخَفِّفَ عَنكُمۡۚ وَخُلِقَ ٱلۡإِنسَٰنُ ضَعِيفٗا",
+   "ur": "ہاں، اللہ تو تم پر رحمت کے ساتھ توجہ کرنا چاہتا ہے مگر جو لوگ خود اپنی خواہشات نفس کی پیروی کر رہے ہیں وہ چاہتے ہیں کہ تم راہ راست سے ہٹ کر دور نکل جاؤ اللہ تم پر سے پابندیوں کو ہلکا کرنا چاہتا ہے کیونکہ انسان کمزور پیدا کیا گیا ہے",
+   "en": "Allah wants to accept your repentance, but those who follow [their] passions want you to digress [into] a great deviation And Allah wants to lighten for you [your difficulties]; and mankind was created weak",
+   "ref": "Surah An-Nisa 4:27–28",
+   "grade": "Qur'an",
+   "hook_ur": "اللہ آپ کی توبہ قبول کرنا چاہتا ہے؛ خواہشات کے پیچھے چلنے والے آپ کو بھٹکانا چاہتے ہیں۔",
+   "hook_en": "Allah wants to accept your repentance; those following desires want you to go astray."
+  },
+  {
+   "id": "q91-9-10",
+   "type": "ayah",
+   "cats": [
+    "heart"
+   ],
+   "ar": "قَدۡ أَفۡلَحَ مَن زَكَّىٰهَا وَقَدۡ خَابَ مَن دَسَّىٰهَا",
+   "ur": "یقیناً فلاح پا گیا وہ جس نے نفس کا تزکیہ کیا اور نامراد ہوا وہ جس نے اُس کو دبا دیا",
+   "en": "He has succeeded who purifies it And he has failed who instills it [with corruption]",
+   "ref": "Surah Ash-Shams 91:9–10",
+   "grade": "Qur'an",
+   "hook_ur": "کامیابی نفس کے تزکیے میں ہے — اسی لیے آپ نے یہ ایپ لگائی تھی۔",
+   "hook_en": "Success lies in purifying the self — that is why you installed this app."
+  },
+  {
+   "id": "q87-14",
+   "type": "ayah",
+   "cats": [
+    "heart"
+   ],
+   "ar": "قَدۡ أَفۡلَحَ مَن تَزَكَّىٰ",
+   "ur": "فلاح پا گیا وہ جس نے پاکیزگی اختیار کی",
+   "en": "He has certainly succeeded who purifies himself",
+   "ref": "Surah Al-A'la 87:14",
+   "grade": "Qur'an",
+   "hook_ur": "فلاح اسی کے لیے جس نے خود کو پاک کیا۔ آج اپنا تزکیہ چن لیجئے۔",
+   "hook_en": "Success is for the one who purifies himself. Choose purity today."
+  },
+  {
+   "id": "q13-28",
+   "type": "ayah",
+   "cats": [
+    "heart",
+    "remedy"
+   ],
+   "ar": "ٱلَّذِينَ ءَامَنُواْ وَتَطۡمَئِنُّ قُلُوبُهُم بِذِكۡرِ ٱللَّهِۗ أَلَا بِذِكۡرِ ٱللَّهِ تَطۡمَئِنُّ ٱلۡقُلُوبُ",
+   "ur": "ایسے ہی لوگ ہیں وہ جنہوں نے (اِس نبی کی دعوت کو) مان لیا اور اُن کے دلوں کو اللہ کی یاد سے اطمینان نصیب ہوتا ہے خبردار رہو! اللہ کی یاد ہی وہ چیز ہے جس سے دلوں کو اطمینان نصیب ہوا کرتا ہے",
+   "en": "Those who have believed and whose hearts are assured by the remembrance of Allah. Unquestionably, by the remembrance of Allah hearts are assured",
+   "ref": "Surah Ar-Ra'd 13:28",
+   "grade": "Qur'an",
+   "hook_ur": "دل کا سکون گناہ میں نہیں، اللہ کے ذکر میں ہے۔ ابھی «سبحان اللہ» کہیے۔",
+   "hook_en": "Peace for the heart is in the remembrance of Allah, not in sin. Say “SubhanAllah” now."
+  },
+  {
+   "id": "q2-222a",
+   "type": "ayah",
+   "cats": [
+    "tawbah",
+    "heart"
+   ],
+   "ar": "… إِنَّ ٱللَّهَ يُحِبُّ ٱلتَّوَّـٰبِينَ وَيُحِبُّ ٱلۡمُتَطَهِّرِينَ",
+   "ur": "… اللہ اُن لوگوں کو پسند کرتا ہے، جو بدی سے باز رہیں اور پاکیزگی اختیار کریں",
+   "en": "… Indeed, Allah loves those who are constantly repentant and loves those who purify themselves",
+   "ref": "Surah Al-Baqarah 2:222",
+   "grade": "Qur'an",
+   "hook_ur": "اللہ توبہ کرنے والوں اور پاک رہنے والوں سے محبت کرتا ہے۔",
+   "hook_en": "Allah loves those who repent often and those who keep themselves pure."
+  },
+  {
+   "id": "h-bukhari-50",
+   "type": "hadith",
+   "cats": [
+    "allah_sees"
+   ],
+   "ar": "أَنْ تَعْبُدَ اللَّهَ كَأَنَّكَ تَرَاهُ، فَإِنْ لَمْ تَكُنْ تَرَاهُ فَإِنَّهُ يَرَاكَ",
+   "ur": "احسان یہ ہے کہ تم اللہ کی عبادت اس طرح کرو گویا تم اسے دیکھ رہے ہو، اور اگر تم اسے نہیں دیکھ پاتے تو (یقین رکھو کہ) وہ تمہیں دیکھ رہا ہے۔",
+   "en": "Ihsan is that you worship Allah as if you see Him; and if you do not see Him, then [know that] He sees you.",
+   "ref": "Sahih al-Bukhari 50, Sahih Muslim 8",
+   "grade": "Sahih",
+   "hook_ur": "اگر آپ اسے نہیں دیکھ رہے، وہ تو آپ کو دیکھ رہا ہے۔",
+   "hook_en": "If you do not see Him, He certainly sees you."
+  },
+  {
+   "id": "h-muslim-2657",
+   "type": "hadith",
+   "cats": [
+    "gaze"
+   ],
+   "ar": "كُتِبَ عَلَى ابْنِ آدَمَ نَصِيبُهُ مِنَ الزِّنَا مُدْرِكٌ ذَلِكَ لَا مَحَالَةَ، فَالْعَيْنَانِ زِنَاهُمَا النَّظَرُ، وَالْأُذُنَانِ زِنَاهُمَا الِاسْتِمَاعُ، وَاللِّسَانُ زِنَاهُ الْكَلَامُ، وَالْيَدُ زِنَاهَا الْبَطْشُ، وَالرِّجْلُ زِنَاهَا الْخُطَا، وَالْقَلْبُ يَهْوَى وَيَتَمَنَّى، وَيُصَدِّقُ ذَلِكَ الْفَرْجُ وَيُكَذِّبُهُ",
+   "ur": "ابنِ آدم پر زنا میں سے اس کا حصہ لکھ دیا گیا ہے جسے وہ لازماً پا کر رہتا ہے: آنکھوں کا زنا دیکھنا ہے، کانوں کا زنا سننا ہے، زبان کا زنا بولنا ہے، ہاتھ کا زنا پکڑنا ہے، پاؤں کا زنا چل کر جانا ہے، اور دل خواہش اور تمنا کرتا ہے، پھر شرمگاہ اس کی تصدیق کر دیتی ہے یا تکذیب۔",
+   "en": "The son of Adam has his share of zina decreed for him, which he will inevitably meet: the eyes' zina is looking, the ears' zina is listening, the tongue's zina is speaking, the hand's zina is touching, the foot's zina is walking [towards it]; the heart desires and wishes, and the private part either confirms that or denies it.",
+   "ref": "Sahih Muslim 2657",
+   "grade": "Sahih",
+   "hook_ur": "ہر نگاہ کا حساب ہے — آنکھ کا زنا بھی لکھا جاتا ہے۔",
+   "hook_en": "Even the gaze is counted as the zina of the eye."
+  },
+  {
+   "id": "h-muslim-2159",
+   "type": "hadith",
+   "cats": [
+    "gaze"
+   ],
+   "ar": "سَأَلْتُ رَسُولَ اللَّهِ ﷺ عَنْ نَظَرِ الْفُجَاءَةِ، فَأَمَرَنِي أَنْ أَصْرِفَ بَصَرِي",
+   "ur": "میں نے رسول اللہ ﷺ سے اچانک پڑ جانے والی نظر کے بارے میں پوچھا تو آپ ﷺ نے مجھے حکم دیا کہ میں اپنی نظر پھیر لوں۔",
+   "en": "I asked the Messenger of Allah ﷺ about a sudden glance, and he commanded me to turn my gaze away.",
+   "ref": "Sahih Muslim 2159",
+   "grade": "Sahih",
+   "hook_ur": "اچانک نظر پڑ جائے تو فوراً ہٹا لیجئے — نبی ﷺ کا حکم۔",
+   "hook_en": "If a glance falls by surprise, turn it away at once — the Prophet's ﷺ instruction."
+  },
+  {
+   "id": "h-abudawud-2149",
+   "type": "hadith",
+   "cats": [
+    "gaze"
+   ],
+   "ar": "يَا عَلِيُّ، لَا تُتْبِعِ النَّظْرَةَ النَّظْرَةَ، فَإِنَّ لَكَ الْأُولَى وَلَيْسَتْ لَكَ الْآخِرَةُ",
+   "ur": "اے علیؓ! ایک نظر کے بعد دوسری نظر مت ڈالو؛ پہلی تمہارے لیے (معاف) ہے مگر دوسری تمہارے لیے نہیں۔",
+   "en": "O Ali, do not follow one glance with another. The first is for you, but the second is not.",
+   "ref": "Sunan Abi Dawud 2149, Jami' at-Tirmidhi 2777",
+   "grade": "Hasan",
+   "hook_ur": "پہلی نظر معاف، دوسری نہیں۔ دوبارہ مت دیکھئے۔",
+   "hook_en": "The first look is excused; the second is not. Do not look again."
+  },
+  {
+   "id": "h-bukhari-6474",
+   "type": "hadith",
+   "cats": [
+    "fitna",
+    "remedy",
+    "hereafter"
+   ],
+   "ar": "مَنْ يَضْمَنْ لِي مَا بَيْنَ لَحْيَيْهِ وَمَا بَيْنَ رِجْلَيْهِ أَضْمَنْ لَهُ الْجَنَّةَ",
+   "ur": "جو شخص مجھے اس چیز کی ضمانت دے جو اس کے دونوں جبڑوں کے درمیان ہے (زبان) اور جو اس کی دونوں ٹانگوں کے درمیان ہے (شرمگاہ)، میں اس کے لیے جنت کی ضمانت دیتا ہوں۔",
+   "en": "Whoever guarantees me what is between his jaws [the tongue] and what is between his legs [the private part], I guarantee him Paradise.",
+   "ref": "Sahih al-Bukhari 6474",
+   "grade": "Sahih",
+   "hook_ur": "دو چیزوں کی ضمانت — زبان اور شرمگاہ — اور بدلے میں جنت کی ضمانت۔",
+   "hook_en": "Guarantee two things — the tongue and the private part — and Paradise is guaranteed."
+  },
+  {
+   "id": "h-bukhari-6069",
+   "type": "hadith",
+   "cats": [
+    "shame"
+   ],
+   "ar": "كُلُّ أُمَّتِي مُعَافًى إِلَّا الْمُجَاهِرِينَ",
+   "ur": "میری ساری امت کو معافی ملے گی سوائے ان لوگوں کے جو اپنے گناہ کھلم کھلا کرتے یا ظاہر کرتے ہیں۔",
+   "en": "All of my Ummah will be forgiven [or kept safe], except those who openly expose their sins.",
+   "ref": "Sahih al-Bukhari 6069, Sahih Muslim 2990",
+   "grade": "Sahih",
+   "hook_ur": "اللہ نے پردہ ڈالا ہوا ہے — اس پردے کی لاج رکھیے۔",
+   "hook_en": "Allah has veiled your faults — honour that veil."
+  },
+  {
+   "id": "h-ibnmajah-4245",
+   "type": "hadith",
+   "cats": [
+    "allah_sees",
+    "hereafter"
+   ],
+   "ar": "لَأَعْلَمَنَّ أَقْوَامًا مِنْ أُمَّتِي يَأْتُونَ يَوْمَ الْقِيَامَةِ بِحَسَنَاتٍ أَمْثَالِ جِبَالِ تِهَامَةَ بِيضًا، فَيَجْعَلُهَا اللَّهُ عَزَّ وَجَلَّ هَبَاءً مَنْثُورًا … إِذَا خَلَوْا بِمَحَارِمِ اللَّهِ انْتَهَكُوهَا",
+   "ur": "میں اپنی امت کے ایسے لوگوں کو جانتا ہوں جو قیامت کے دن تہامہ کے سفید پہاڑوں جیسی نیکیاں لے کر آئیں گے، مگر اللہ انہیں بکھری ہوئی گرد بنا دے گا … (یہ وہ لوگ ہیں) جو تنہائی میں اللہ کی حرام کی ہوئی چیزوں کی حرمت پامال کرتے ہیں۔",
+   "en": "I know people from my Ummah who will come on the Day of Resurrection with good deeds like white mountains of Tihamah, but Allah will make them scattered dust … [they are those] who, when alone, violate the prohibitions of Allah.",
+   "ref": "Sunan Ibn Majah 4245",
+   "grade": "Sahih",
+   "hook_ur": "تنہائی میں اللہ کی حدیں توڑنے والوں کے پہاڑ جیسے اعمال بھی خاک ہو جائیں گے۔",
+   "hook_en": "Mountains of good deeds can turn to dust for those who break His limits in private."
+  },
+  {
+   "id": "h-muslim-2742",
+   "type": "hadith",
+   "cats": [
+    "fitna",
+    "allah_sees"
+   ],
+   "ar": "إِنَّ الدُّنْيَا حُلْوَةٌ خَضِرَةٌ، وَإِنَّ اللَّهَ مُسْتَخْلِفُكُمْ فِيهَا فَيَنْظُرُ كَيْفَ تَعْمَلُونَ",
+   "ur": "دنیا میٹھی اور سرسبز ہے، اور اللہ تمہیں اس میں خلیفہ بنانے والا ہے، پھر دیکھے گا کہ تم کیسا عمل کرتے ہو۔",
+   "en": "The world is sweet and green, and Allah is going to make you successors in it, and He sees how you act.",
+   "ref": "Sahih Muslim 2742",
+   "grade": "Sahih",
+   "hook_ur": "دنیا میٹھی اور سرسبز ہے — اور اللہ دیکھ رہا ہے کہ آپ کیسا عمل کرتے ہیں۔",
+   "hook_en": "The world looks sweet and green — and Allah is watching how you act."
+  },
+  {
+   "id": "h-bukhari-660",
+   "type": "hadith",
+   "cats": [
+    "fitna",
+    "remedy"
+   ],
+   "ar": "وَرَجُلٌ دَعَتْهُ امْرَأَةٌ ذَاتُ مَنْصِبٍ وَجَمَالٍ، فَقَالَ: إِنِّي أَخَافُ اللَّهَ …",
+   "ur": "… اور وہ شخص جسے کسی حسب و نسب اور حسن والی عورت نے (برائی کی) دعوت دی تو اس نے کہا: میں اللہ سے ڈرتا ہوں۔ (یہ ان سات میں سے ہے جنہیں اللہ اس دن اپنے سائے میں رکھے گا جس دن اس کے سائے کے سوا کوئی سایہ نہ ہوگا۔)",
+   "en": "… and a man whom a woman of status and beauty invited [to sin], but he said, “I fear Allah.” [He is among the seven whom Allah will shade in His shade on the Day when there is no shade but His.]",
+   "ref": "Sahih al-Bukhari 660, Sahih Muslim 1031",
+   "grade": "Sahih",
+   "hook_ur": "ایک شخص نے «میں اللہ سے ڈرتا ہوں» کہہ کر گناہ ٹھکرایا — اور عرش کا سایہ پایا۔ آپ بھی کہہ سکتے ہیں۔",
+   "hook_en": "He said “I fear Allah” and earned the shade of the Throne. You can say it too."
+  },
+  {
+   "id": "h-tirmidhi-2499",
+   "type": "hadith",
+   "cats": [
+    "tawbah"
+   ],
+   "ar": "كُلُّ ابْنِ آدَمَ خَطَّاءٌ، وَخَيْرُ الْخَطَّائِينَ التَّوَّابُونَ",
+   "ur": "ہر ابنِ آدم خطا کار ہے، اور بہترین خطا کار وہ ہیں جو بہت توبہ کرنے والے ہیں۔",
+   "en": "Every son of Adam sins, and the best of those who sin are those who repent often.",
+   "ref": "Jami' at-Tirmidhi 2499, Sunan Ibn Majah 4251",
+   "grade": "Hasan",
+   "hook_ur": "ہر انسان خطا کار ہے، بہترین وہ ہے جو توبہ کرنے والا ہے۔",
+   "hook_en": "Everyone errs; the best are those who keep repenting."
+  },
+  {
+   "id": "h-ibnmajah-4250",
+   "type": "hadith",
+   "cats": [
+    "tawbah"
+   ],
+   "ar": "التَّائِبُ مِنَ الذَّنْبِ كَمَنْ لَا ذَنْبَ لَهُ",
+   "ur": "گناہ سے توبہ کرنے والا اس شخص کی طرح ہے جس کا کوئی گناہ نہ ہو۔",
+   "en": "The one who repents from sin is like one who has no sin.",
+   "ref": "Sunan Ibn Majah 4250",
+   "grade": "Hasan",
+   "hook_ur": "گناہ سے توبہ کرنے والا ایسا ہے جیسے اس نے گناہ کیا ہی نہیں۔",
+   "hook_en": "The one who repents is like one who never sinned."
+  },
+  {
+   "id": "h-muslim-2759",
+   "type": "hadith",
+   "cats": [
+    "tawbah"
+   ],
+   "ar": "إِنَّ اللَّهَ عَزَّ وَجَلَّ يَبْسُطُ يَدَهُ بِاللَّيْلِ لِيَتُوبَ مُسِيءُ النَّهَارِ، وَيَبْسُطُ يَدَهُ بِالنَّهَارِ لِيَتُوبَ مُسِيءُ اللَّيْلِ",
+   "ur": "اللہ رات کو اپنا ہاتھ پھیلاتا ہے تاکہ دن میں برائی کرنے والا توبہ کر لے، اور دن کو اپنا ہاتھ پھیلاتا ہے تاکہ رات میں برائی کرنے والا توبہ کر لے۔",
+   "en": "Allah extends His hand by night so that the one who erred by day may repent, and extends His hand by day so that the one who erred by night may repent.",
+   "ref": "Sahih Muslim 2759",
+   "grade": "Sahih",
+   "hook_ur": "اللہ رات دن اپنا ہاتھ پھیلائے ہوئے ہے — لوٹ آئیے۔",
+   "hook_en": "Allah keeps His hand extended night and day — return to Him."
+  },
+  {
+   "id": "h-bukhari-6306",
+   "type": "hadith",
+   "cats": [
+    "tawbah"
+   ],
+   "ar": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنوبَ إِلاَّ أَنْتَ",
+   "ur": "اے اللہ! تو ہی میرا رب ہے، تیرے سوا کوئی معبود نہیں، تو نے مجھے پیدا کیا اور میں تیرا بندہ ہوں، اور میں اپنی استطاعت کے مطابق تیرے عہد اور وعدے پر قائم ہوں۔ میں نے جو کیا اس کے شر سے تیری پناہ مانگتا ہوں۔ میں تیری نعمت کا اعتراف کرتا ہوں جو مجھ پر ہے اور اپنے گناہ کا اعتراف کرتا ہوں، پس مجھے معاف فرما، کیونکہ تیرے سوا کوئی گناہ معاف نہیں کر سکتا۔",
+   "en": "O Allah, You are my Lord; there is no god but You. You created me and I am Your servant, and I keep Your covenant and promise as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favour upon me and I acknowledge my sin, so forgive me, for none forgives sins except You.",
+   "ref": "Sayyid al-Istighfar — Sahih al-Bukhari 6306",
+   "grade": "Sahih",
+   "hook_ur": "یہ سیدالاستغفار ہے — ابھی پڑھیے۔",
+   "hook_en": "This is Sayyid al-Istighfar — recite it now."
+  },
+  {
+   "id": "h-tirmidhi-3334",
+   "type": "hadith",
+   "cats": [
+    "heart",
+    "tawbah"
+   ],
+   "ar": "إِنَّ الْعَبْدَ إِذَا أَخْطَأَ خَطِيئَةً نُكِتَتْ فِي قَلْبِهِ نُكْتَةٌ سَوْدَاءُ، فَإِذَا هُوَ نَزَعَ وَاسْتَغْفَرَ وَتَابَ سُقِلَ قَلْبُهُ",
+   "ur": "جب بندہ کوئی گناہ کرتا ہے تو اس کے دل میں ایک سیاہ نقطہ لگ جاتا ہے؛ پھر اگر وہ باز آ جائے، استغفار کرے اور توبہ کرے تو اس کا دل صاف کر دیا جاتا ہے۔",
+   "en": "When a servant commits a sin, a black spot is placed on his heart. If he abandons it, seeks forgiveness and repents, his heart is polished clean.",
+   "ref": "Jami' at-Tirmidhi 3334, Sunan Ibn Majah 4244",
+   "grade": "Hasan Sahih",
+   "hook_ur": "ہر گناہ دل پر سیاہ نقطہ ڈالتا ہے۔ توبہ دل کو پھر چمکا دیتی ہے۔",
+   "hook_en": "Each sin leaves a black spot on the heart; repentance polishes it clean."
+  },
+  {
+   "id": "h-tirmidhi-2416",
+   "type": "hadith",
+   "cats": [
+    "hereafter"
+   ],
+   "ar": "لَا تَزُولُ قَدَمَا ابْنِ آدَمَ يَوْمَ الْقِيَامَةِ مِنْ عِنْدِ رَبِّهِ حَتَّى يُسْأَلَ عَنْ خَمْسٍ: عَنْ عُمُرِهِ فِيمَ أَفْنَاهُ، وَعَنْ شَبَابِهِ فِيمَ أَبْلَاهُ …",
+   "ur": "قیامت کے دن ابنِ آدم کے قدم اپنے رب کے پاس سے اس وقت تک نہ ہٹ سکیں گے جب تک اس سے پانچ چیزوں کے بارے میں پوچھ نہ لیا جائے: اس کی عمر کے بارے میں کہ کہاں گنوائی، اور اس کی جوانی کے بارے میں کہ کہاں کھپائی …",
+   "en": "The feet of the son of Adam will not move on the Day of Resurrection from before his Lord until he is asked about five things: his life — how he spent it; his youth — how he used it … ",
+   "ref": "Jami' at-Tirmidhi 2416",
+   "grade": "Hasan Sahih",
+   "hook_ur": "قیامت کے دن جوانی کا سوال ہوگا: کہاں گنوائی؟",
+   "hook_en": "On the Day of Judgement you will be asked: how did you spend your youth?"
+  },
+  {
+   "id": "h-bukhari-5066",
+   "type": "hadith",
+   "cats": [
+    "gaze",
+    "remedy"
+   ],
+   "ar": "يَا مَعْشَرَ الشَّبَابِ، مَنِ اسْتَطَاعَ مِنْكُمُ الْبَاءَةَ فَلْيَتَزَوَّجْ، فَإِنَّهُ أَغَضُّ لِلْبَصَرِ وَأَحْصَنُ لِلْفَرْجِ، وَمَنْ لَمْ يَسْتَطِعْ فَعَلَيْهِ بِالصَّوْمِ فَإِنَّهُ لَهُ وِجَاءٌ",
+   "ur": "اے نوجوانوں کی جماعت! تم میں سے جو شادی کی استطاعت رکھے وہ شادی کر لے، کیونکہ یہ نگاہ کو زیادہ نیچا رکھتی اور شرمگاہ کو زیادہ محفوظ کرتی ہے، اور جو استطاعت نہ رکھے وہ روزے رکھے، کیونکہ وہ اس کے لیے ڈھال ہیں۔",
+   "en": "O young people! Whoever among you can afford marriage, let him marry, for it lowers the gaze and protects chastity; and whoever cannot, let him fast, for it is a shield for him.",
+   "ref": "Sahih al-Bukhari 5066, Sahih Muslim 1400",
+   "grade": "Sahih",
+   "hook_ur": "نکاح نگاہ اور پاکدامنی کی حفاظت ہے، اور جو استطاعت نہ رکھے وہ روزے رکھے۔",
+   "hook_en": "Marriage protects the gaze and chastity; whoever cannot, should fast."
+  },
+  {
+   "id": "h-tirmidhi-1987",
+   "type": "hadith",
+   "cats": [
+    "tawbah",
+    "remedy"
+   ],
+   "ar": "اتَّقِ اللَّهَ حَيْثُمَا كُنْت، وَأَتْبِعْ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا، وَخَالِقْ النَّاسَ بِخُلُقٍ حَسَنٍ",
+   "ur": "جہاں کہیں بھی ہو اللہ سے ڈرو، برائی کے بعد نیکی کر لو وہ اسے مٹا دے گی، اور لوگوں سے اچھے اخلاق سے پیش آؤ۔",
+   "en": "Have taqwa of Allah wherever you may be, and follow up a bad deed with a good deed which will wipe it out, and behave well towards the people.",
+   "ref": "Jami' at-Tirmidhi 1987 (Nawawi 18)",
+   "grade": "Hasan",
+   "hook_ur": "برائی کے بعد فوراً نیکی کر لیجئے — وہ اسے مٹا دے گی۔",
+   "hook_en": "Follow a bad deed with a good one — it wipes it out."
+  },
+  {
+   "id": "h-bukhari-3483",
+   "type": "hadith",
+   "cats": [
+    "shame"
+   ],
+   "ar": "إنَّ مِمَّا أَدْرَكَ النَّاسُ مِنْ كَلَامِ النُّبُوَّةِ الْأُولَى: إذَا لَمْ تَسْتَحِ فَاصْنَعْ مَا شِئْت",
+   "ur": "پہلی نبوت کے کلام میں سے جو لوگوں نے پایا ان میں یہ بھی ہے: جب تم میں حیا نہ رہے تو جو چاہو کرو۔",
+   "en": "Verily, from what the people learnt of the speech of the earliest prophecy is: If you feel no shame, then do as you wish.",
+   "ref": "Sahih al-Bukhari 3483 (Nawawi 20)",
+   "grade": "Sahih",
+   "hook_ur": "جب شرم نہ رہے تو انسان جو چاہے کرتا ہے۔ اپنی حیا کو بچا لیجئے۔",
+   "hook_en": "When shame is gone, a person does as he pleases. Protect your haya."
+  },
+  {
+   "id": "h-bukhari-24",
+   "type": "hadith",
+   "cats": [
+    "shame"
+   ],
+   "ar": "الْحَيَاءُ مِنَ الْإِيمَانِ",
+   "ur": "حیا ایمان کا حصہ ہے۔",
+   "en": "Modesty is part of faith.",
+   "ref": "Sahih al-Bukhari 24, Sahih Muslim 36",
+   "grade": "Sahih",
+   "hook_ur": "حیا ایمان کا حصہ ہے۔ آج اپنے ایمان کی حفاظت کیجئے۔",
+   "hook_en": "Modesty is part of faith. Protect your faith today."
+  },
+  {
+   "id": "h-muslim-2553",
+   "type": "hadith",
+   "cats": [
+    "shame",
+    "heart"
+   ],
+   "ar": "الْبِرُّ حُسْنُ الْخُلُقِ، وَالْإِثْمُ مَا حَاكَ فِي صَدْرِك، وَكَرِهْت أَنْ يَطَّلِعَ عَلَيْهِ النَّاسُ",
+   "ur": "نیکی حسنِ اخلاق ہے، اور گناہ وہ ہے جو تمہارے دل میں کھٹکے اور تم اس بات کو ناپسند کرو کہ لوگ اس سے باخبر ہوں۔",
+   "en": "Righteousness is good character, and sin is what wavers in your heart and what you dislike people finding out about.",
+   "ref": "Sahih Muslim 2553 (Nawawi 27)",
+   "grade": "Sahih",
+   "hook_ur": "گناہ وہ ہے جو دل میں کھٹکے اور آپ نہ چاہیں کہ لوگ جان لیں۔",
+   "hook_en": "Sin is what stirs in your heart and what you hate people to see."
+  },
+  {
+   "id": "h-bukhari-52",
+   "type": "hadith",
+   "cats": [
+    "heart",
+    "fitna"
+   ],
+   "ar": "أَلَا وَإِنَّ لِكُلِّ مَلِكٍ حِمًى، أَلَا وَإِنَّ حِمَى اللَّهِ مَحَارِمُهُ، أَلَا وَإِنَّ فِي الْجَسَدِ مُضْغَةً إذَا صَلَحَتْ صَلَحَ الْجَسَدُ كُلُّهُ، وَإذَا فَسَدَتْ فَسَدَ الْجَسَدُ كُلُّهُ، أَلَا وَهِيَ الْقَلْبُ",
+   "ur": "خبردار! ہر بادشاہ کی ایک چراگاہ ہوتی ہے، اور اللہ کی چراگاہ اس کی حرام کردہ چیزیں ہیں۔ خبردار! جسم میں گوشت کا ایک ٹکڑا ہے، اگر وہ سنور جائے تو سارا جسم سنور جاتا ہے، اور اگر وہ بگڑ جائے تو سارا جسم بگڑ جاتا ہے؛ خبردار! وہ دل ہے۔",
+   "en": "Beware! Every king has a sanctuary, and Allah's sanctuary is His prohibitions. Beware! In the body there is a morsel of flesh: if it is sound, the whole body is sound; if it is corrupt, the whole body is corrupt. Beware! It is the heart.",
+   "ref": "Sahih al-Bukhari 52, Sahih Muslim 1599 (Nawawi 6)",
+   "grade": "Sahih",
+   "hook_ur": "اللہ کی حدود اس کی حرام کردہ چیزیں ہیں — اور پورے جسم کا فیصلہ دل کرتا ہے۔",
+   "hook_en": "Allah's limits are His prohibitions — and the heart decides the whole body."
+  },
+  {
+   "id": "h-ahmad-23074",
+   "type": "hadith",
+   "cats": [
+    "remedy"
+   ],
+   "ar": "إِنَّكَ لَنْ تَدَعَ شَيْئًا لِلَّهِ عَزَّ وَجَلَّ إِلَّا بَدَّلَكَ اللَّهُ بِهِ مَا هُوَ خَيْرٌ لَكَ مِنْهُ",
+   "ur": "تم اللہ عزوجل کی خاطر جو چیز بھی چھوڑو گے، اللہ اس کے بدلے تمہیں اس سے بہتر عطا فرمائے گا۔",
+   "en": "You will never give up something for the sake of Allah, the Mighty and Majestic, except that Allah will replace it with something better for you.",
+   "ref": "Musnad Ahmad 23074",
+   "grade": "Sahih",
+   "hook_ur": "جو چیز اللہ کے لیے چھوڑو گے، اللہ اس سے بہتر عطا کرے گا۔",
+   "hook_en": "Whatever you give up for Allah, He replaces with something better."
+  },
+  {
+   "id": "h-tirmidhi-2518",
+   "type": "hadith",
+   "cats": [
+    "heart"
+   ],
+   "ar": "دَعْ مَا يُرِيبُك إلَى مَا لَا يُرِيبُك",
+   "ur": "جو چیز تمہیں شک میں ڈالے اسے چھوڑ کر وہ اختیار کرو جو شک میں نہ ڈالے۔",
+   "en": "Leave that which makes you doubt for that which does not make you doubt.",
+   "ref": "Jami' at-Tirmidhi 2518 (Nawawi 11)",
+   "grade": "Hasan Sahih",
+   "hook_ur": "شک والی بات چھوڑ کر بے شک والی اختیار کیجئے۔",
+   "hook_en": "Leave what makes you doubt for what does not."
+  }
+ ]
+}
