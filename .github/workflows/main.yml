@@ -31,6 +31,7 @@ jobs:
                    app/src/main/assets/data/reminders.json \
                    app/src/main/assets/blocklist/keywords.txt \
                    app/src/main/assets/blocklist/domains.txt \
+                   app/src/main/assets/models/nudenet-320n.onnx \
                    app/cybertazkiah.jks; do
             test -f "$f" || { echo "ERROR: $f is missing from the repo"; exit 1; }
           done
