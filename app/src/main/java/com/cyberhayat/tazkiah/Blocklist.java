@@ -122,14 +122,16 @@ final class Blocklist {
         return padded.contains(needle);
     }
 
-    /** Score of distinct matching terms. 4 = one strong term. */
-    static int score(String text) {
+    /** Score of distinct matching terms. 4 = one strong term. Includes the leetspeak pass (use for short text). */
+    static int score(String text) { return score(text, true); }
+
+    static int score(String text, boolean leet) {
         if (terms == null || text == null || text.isEmpty()) return 0;
         String a = norm(text, false);
-        String b = norm(text, true);
+        String b = leet ? norm(text, true) : null;
         int s = 0;
-        for (Term t : terms) if (matches(a, t) || matches(b, t)) s += t.pts;
-        for (Term t : custom) if (matches(a, t) || matches(b, t)) s += t.pts;
+        for (Term t : terms) if (matches(a, t) || (b != null && matches(b, t))) s += t.pts;
+        for (Term t : custom) if (matches(a, t) || (b != null && matches(b, t))) s += t.pts;
         return s;
     }
 

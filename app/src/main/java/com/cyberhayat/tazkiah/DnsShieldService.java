@@ -39,6 +39,7 @@ public class DnsShieldService extends VpnService {
     private final Object outLock = new Object();
     private int ipId = 1;
     private final Map<String, Long> recent = new HashMap<>();
+    private volatile int bestUpstream = 0;
 
     @Override
     public int onStartCommand(Intent i, int flags, int startId) {
@@ -66,7 +67,7 @@ public class DnsShieldService extends VpnService {
             tun = b.establish();
             if (tun == null) { Prefs.setDnsWanted(this, false); return; }
             stop = false;
-            pool = Executors.newFixedThreadPool(6);
+            pool = Executors.newFixedThreadPool(12);
             out = new FileOutputStream(tun.getFileDescriptor());
             final ParcelFileDescriptor pfd = tun;
             loop = new Thread(new Runnable() { @Override public void run() { readLoop(pfd); } }, "tazkiah-dns");
@@ -136,16 +137,19 @@ public class DnsShieldService extends VpnService {
     }
 
     private byte[] forward(byte[] dns) {
-        for (String up : UPSTREAM) {
+        int n = UPSTREAM.length;
+        for (int k = 0; k < n; k++) {
+            int idx = (bestUpstream + k) % n;   // start with the resolver that worked last time
             DatagramSocket s = null;
             try {
                 s = new DatagramSocket();
                 protect(s);
-                s.setSoTimeout(2500);
-                s.send(new DatagramPacket(dns, dns.length, InetAddress.getByName(up), 53));
+                s.setSoTimeout(k == 0 ? 1500 : 1200);
+                s.send(new DatagramPacket(dns, dns.length, InetAddress.getByName(UPSTREAM[idx]), 53));
                 byte[] rb = new byte[4096];
                 DatagramPacket rp = new DatagramPacket(rb, rb.length);
                 s.receive(rp);
+                bestUpstream = idx;
                 return Arrays.copyOf(rb, rp.getLength());
             } catch (IOException ignored) {
                 // try the next resolver

@@ -8,7 +8,9 @@ import android.content.pm.ResolveInfo;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Process;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
@@ -32,19 +34,28 @@ import java.util.Set;
 public class TazkiahAccessibilityService extends AccessibilityService {
     static volatile TazkiahAccessibilityService instance;
 
-    private static final long SCAN_DELAY_MS = 600;
-    private static final int MAX_NODES = 1500, MAX_DEPTH = 45, MAX_CHARS = 24000;
+    // Performance: scans run on a background thread, are debounced, and back off when the screen is heavy.
+    private static final long SCAN_DELAY_MS = 900, MIN_GAP_MS = 1500;
+    private static final int MAX_NODES = 450, MAX_DEPTH = 30, MAX_CHARS = 7000;
 
     private final Handler h = new Handler(Looper.getMainLooper());
     private WindowManager wm;
     private View overlay;
     private boolean overlayGuard;
-    private boolean scanPending, guardPending;
-    private long cooldownUntil, guardGraceUntil;
-    private String lastPkg = "";
+    private volatile boolean scanPending, guardPending;
+    private volatile long cooldownUntil, guardGraceUntil, nextScanAt;
+    private volatile String lastPkg = "";
+    private HandlerThread bgThread;
+    private Handler bg;
+    private int lastHash;
+    private String lastHashPkg = "";
+    // cached settings (refreshed every 3 s, so events never hit SharedPreferences)
+    private volatile boolean cfgProtection = true, cfgGuard;
+    private volatile String cfgSens = "balanced";
+    private long cfgAt;
     private String homePkg = "";
     private String imePkg = "";
-    private Set<String> trusted = new HashSet<>();
+    private volatile Set<String> trusted = new HashSet<>();
     private long trustedLoadedAt;
 
     private static final Set<String> ALWAYS_IGNORED = new HashSet<>();
@@ -74,8 +85,18 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         URL_BARS.put("com.mi.globalbrowser", new String[]{"com.mi.globalbrowser:id/url"});
     }
 
-    private final Runnable scanRunnable = new Runnable() { @Override public void run() { scanPending = false; scanScreen(); } };
-    private final Runnable guardRunnable = new Runnable() { @Override public void run() { guardPending = false; checkGuard(); } };
+    private final Runnable scanRunnable = new Runnable() {
+        @Override public void run() {
+            scanPending = false;
+            long t0 = SystemClock.elapsedRealtime();
+            try { scanScreen(); } catch (Throwable ignored) { }
+            long took = SystemClock.elapsedRealtime() - t0;
+            nextScanAt = SystemClock.elapsedRealtime() + Math.max(MIN_GAP_MS, took * 10); // heavy screen -> scan less
+        }
+    };
+    private final Runnable guardRunnable = new Runnable() {
+        @Override public void run() { guardPending = false; try { checkGuard(); } catch (Throwable ignored) { } }
+    };
     private final Runnable autoClose = new Runnable() { @Override public void run() { dismiss(true); } };
 
     // ------------------------------------------------------------------ lifecycle
@@ -83,6 +104,10 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         super.onServiceConnected();
         instance = this;
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        bgThread = new HandlerThread("tazkiah-scan", Process.THREAD_PRIORITY_BACKGROUND);
+        bgThread.start();
+        bg = new Handler(bgThread.getLooper());
+        refreshCfg(true);
         Blocklist.init(this);
         resolveSystemPackages();
         reloadTrusted();
@@ -90,13 +115,20 @@ public class TazkiahAccessibilityService extends AccessibilityService {
 
     @Override public void onInterrupt() { }
 
+    private void stopBg() {
+        if (bg != null) { bg.removeCallbacksAndMessages(null); }
+        if (bgThread != null) { bgThread.quitSafely(); bgThread = null; bg = null; }
+    }
+
     @Override public boolean onUnbind(Intent intent) {
+        stopBg();
         removeOverlay();
         if (instance == this) instance = null;
         return super.onUnbind(intent);
     }
 
     @Override public void onDestroy() {
+        stopBg();
         removeOverlay();
         if (instance == this) instance = null;
         super.onDestroy();
@@ -112,6 +144,15 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         } catch (Exception ignored) { }
     }
 
+    private void refreshCfg(boolean force) {
+        long now = SystemClock.elapsedRealtime();
+        if (!force && now - cfgAt < 3000) return;
+        cfgAt = now;
+        cfgProtection = Prefs.protection(this);
+        cfgGuard = Prefs.guard(this);
+        cfgSens = Prefs.sensitivity(this);
+    }
+
     private void reloadTrusted() {
         trusted = Prefs.trusted(this);
         trustedLoadedAt = SystemClock.elapsedRealtime();
@@ -124,61 +165,68 @@ public class TazkiahAccessibilityService extends AccessibilityService {
                 || pkg.equals(getPackageName()) || trusted.contains(pkg);
     }
 
-    // ------------------------------------------------------------------ events
+    // ------------------------------------------------------------------ events (main thread: keep it tiny)
     @Override public void onAccessibilityEvent(AccessibilityEvent e) {
-        if (e == null || e.getPackageName() == null) return;
-        String pkg = e.getPackageName().toString();
-        if (pkg.equals(getPackageName())) return;
-        if (overlay != null) return;
+        if (e == null || bg == null) return;
+        CharSequence cp = e.getPackageName();
+        if (cp == null) return;
+        String pkg = cp.toString();
+        if (overlay != null || pkg.equals(getPackageName())) return;
         int type = e.getEventType();
         if (type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) lastPkg = pkg;
+        refreshCfg(false);
 
-        if (Prefs.guard(this) && SETTINGS_PKGS.contains(pkg)) {
+        if (cfgGuard && SETTINGS_PKGS.contains(pkg)) {
             if ((type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED || type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
                     && !guardPending && SystemClock.elapsedRealtime() >= guardGraceUntil) {
                 guardPending = true;
-                h.postDelayed(guardRunnable, 350);
+                bg.postDelayed(guardRunnable, 500);
             }
             return;
         }
-        if (!Prefs.protection(this) || isIgnored(pkg)) return;
+        if (!cfgProtection || isIgnored(pkg)) return;
 
         if (type == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
-            if (e.isPassword()) return;
-            handleTyped(pkg, e);
+            if (!e.isPassword()) handleTyped(e);
             return;
         }
-        if (type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
-                || type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED
-                || type == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
-            if (!scanPending) { scanPending = true; h.postDelayed(scanRunnable, SCAN_DELAY_MS); }
+        if (type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED || type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+            if (!scanPending) {
+                scanPending = true;
+                long wait = Math.max(SCAN_DELAY_MS, nextScanAt - SystemClock.elapsedRealtime());
+                bg.postDelayed(scanRunnable, wait);
+            }
         }
     }
 
-    private int typedThreshold() { return "strict".equals(Prefs.sensitivity(this)) ? 2 : 4; }
+    private int typedThreshold() { return "strict".equals(cfgSens) ? 2 : 4; }
 
     private int screenThreshold(boolean browser) {
-        String s = Prefs.sensitivity(this);
+        String s = cfgSens;
         if ("gentle".equals(s)) return browser ? 8 : 12;
         if ("strict".equals(s)) return browser ? 3 : 4;
         return browser ? 4 : 8;
     }
 
-    private void handleTyped(String pkg, AccessibilityEvent e) {
-        StringBuilder sb = new StringBuilder();
+    private void handleTyped(AccessibilityEvent e) {
         List<CharSequence> parts = e.getText();
-        if (parts != null) for (CharSequence cs : parts) if (cs != null) sb.append(cs).append(' ');
+        if (parts == null || parts.isEmpty()) return;
+        StringBuilder sb = new StringBuilder();
+        for (CharSequence cs : parts) if (cs != null) sb.append(cs).append(' ');
         String text = sb.toString();
-        if (text.length() > 400) text = text.substring(text.length() - 400);
+        if (text.length() < 3) return;
+        if (text.length() > 300) text = text.substring(text.length() - 300);
         String host = Blocklist.extractHost(text);
         if (host != null && Blocklist.hostBlocked(host)) { trigger("browser"); return; }
-        if (Blocklist.score(text) >= typedThreshold()) trigger("search");
+        if (Blocklist.score(text, true) >= typedThreshold()) trigger("search");
     }
 
     // ------------------------------------------------------------------ screen scan
+    /** Runs on the background thread. */
     private void scanScreen() {
-        if (overlay != null || SystemClock.elapsedRealtime() < cooldownUntil) return;
-        if (!Prefs.protection(this)) return;
+        if (overlay != null || SystemClock.elapsedRealtime() < cooldownUntil || !cfgProtection) return;
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (pm != null && !pm.isInteractive()) return;
         AccessibilityNodeInfo root = getRootInActiveWindow();
         if (root == null) return;
         try {
@@ -201,9 +249,12 @@ public class TazkiahAccessibilityService extends AccessibilityService {
                 }
             }
             StringBuilder sb = new StringBuilder();
-            int[] count = {0};
-            collect(root, sb, count, 0);
-            if (Blocklist.score(sb.toString()) >= screenThreshold(browser)) trigger(browser ? "browser" : "screen");
+            collect(root, sb, new int[]{0}, 0);
+            String text = sb.toString();
+            int hash = text.hashCode();
+            if (hash == lastHash && pkg.equals(lastHashPkg)) return; // nothing new on screen since the last scan
+            lastHash = hash; lastHashPkg = pkg;
+            if (Blocklist.score(text, false) >= screenThreshold(browser)) trigger(browser ? "browser" : "screen");
         } finally {
             try { root.recycle(); } catch (Exception ignored) { }
         }
@@ -231,7 +282,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             "stop cyber", "remove", "clear data", "clear storage", "delete"};
 
     private void checkGuard() {
-        if (overlay != null || !Prefs.guard(this) || SystemClock.elapsedRealtime() < guardGraceUntil) return;
+        if (overlay != null || !cfgGuard || SystemClock.elapsedRealtime() < guardGraceUntil) return;
         AccessibilityNodeInfo root = getRootInActiveWindow();
         if (root == null) return;
         try {
@@ -240,7 +291,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             String t = sb.toString().toLowerCase(Locale.ROOT);
             if (!t.contains("cyber tazkiah")) return;
             for (String w : GUARD_WORDS) {
-                if (t.contains(w)) { Prefs.recordBlock(this, "guard"); showOverlay(true, Reminder.pick(this, false)); return; }
+                if (t.contains(w)) { guardAlert(); return; }
             }
         } finally {
             try { root.recycle(); } catch (Exception ignored) { }
@@ -248,10 +299,25 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     }
 
     // ------------------------------------------------------------------ triggers
-    private void trigger(String cat) {
-        if (overlay != null || SystemClock.elapsedRealtime() < cooldownUntil) return;
-        Prefs.recordBlock(this, cat);
-        showOverlay(false, Reminder.pick(this, false));
+    private void guardAlert() {
+        h.post(new Runnable() {
+            @Override public void run() {
+                if (overlay != null) return;
+                Prefs.recordBlock(TazkiahAccessibilityService.this, "guard");
+                showOverlay(true, Reminder.pick(TazkiahAccessibilityService.this, false));
+            }
+        });
+    }
+
+    /** Safe from any thread; the overlay is always shown on the main thread. */
+    private void trigger(final String cat) {
+        h.post(new Runnable() {
+            @Override public void run() {
+                if (overlay != null || SystemClock.elapsedRealtime() < cooldownUntil) return;
+                Prefs.recordBlock(TazkiahAccessibilityService.this, cat);
+                showOverlay(false, Reminder.pick(TazkiahAccessibilityService.this, false));
+            }
+        });
     }
 
     /** Called by DnsShieldService (any thread) when a blocked domain was looked up. */
@@ -332,6 +398,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     private void dismiss(boolean goBack) {
         removeOverlay();
         cooldownUntil = SystemClock.elapsedRealtime() + 4000;
+        lastHash = 0;
         if (goBack) {
             performGlobalAction(GLOBAL_ACTION_BACK);
             h.postDelayed(new Runnable() { @Override public void run() { performGlobalAction(GLOBAL_ACTION_HOME); } }, 350);
