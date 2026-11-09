@@ -39,8 +39,8 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     static volatile TazkiahAccessibilityService instance;
 
     // Performance: scans run on a background thread, are debounced, and back off when the screen is heavy.
-    private static final long SCAN_DELAY_MS = 900, MIN_GAP_MS = 1500;
-    private static final int MAX_NODES = 450, MAX_DEPTH = 30, MAX_CHARS = 7000;
+    private static final long SCAN_DELAY_MS = 450, MIN_GAP_MS = 700;
+    private static final int MAX_NODES = 1600, MAX_DEPTH = 40, MAX_CHARS = 22000;
 
     private final Handler h = new Handler(Looper.getMainLooper());
     private WindowManager wm;
@@ -59,7 +59,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     private String lastHashPkg = "";
     // cached settings (refreshed every 3 s, so events never hit SharedPreferences)
     private volatile boolean cfgProtection = true, cfgGuard;
-    private volatile String cfgSens = "balanced";
+    private volatile String cfgSens = "hyper";
     private long cfgAt;
     private String homePkg = "";
     private String imePkg = "";
@@ -99,7 +99,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             long t0 = SystemClock.elapsedRealtime();
             try { scanScreen(); } catch (Throwable ignored) { }
             long took = SystemClock.elapsedRealtime() - t0;
-            nextScanAt = SystemClock.elapsedRealtime() + Math.max(MIN_GAP_MS, took * 10); // heavy screen -> scan less
+            nextScanAt = SystemClock.elapsedRealtime() + Math.max(MIN_GAP_MS, took * 6); // heavy screen -> scan less
         }
     };
     private final Runnable guardRunnable = new Runnable() {
@@ -198,11 +198,19 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         if (!cfgProtection || isIgnored(pkg)) return;
         ensureVisual();
 
+        Diag.events++; Diag.eventsAt = SystemClock.elapsedRealtime();
         if (type == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
             if (!e.isPassword()) handleTyped(e);
             return;
         }
-        if (type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED || type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+        // look at whatever text the event itself carries (clicked/focused/scrolled items), instantly
+        if (type == AccessibilityEvent.TYPE_VIEW_CLICKED || type == AccessibilityEvent.TYPE_VIEW_FOCUSED
+                || type == AccessibilityEvent.TYPE_VIEW_SCROLLED || type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+            quickCheck(e, type != AccessibilityEvent.TYPE_VIEW_SCROLLED && type != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);
+        }
+        if (type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED || type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED
+                || type == AccessibilityEvent.TYPE_VIEW_SCROLLED || type == AccessibilityEvent.TYPE_VIEW_CLICKED
+                || type == AccessibilityEvent.TYPE_VIEW_FOCUSED) {
             if (!scanPending) {
                 scanPending = true;
                 long wait = Math.max(SCAN_DELAY_MS, nextScanAt - SystemClock.elapsedRealtime());
@@ -211,13 +219,33 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         }
     }
 
-    private int typedThreshold() { return "strict".equals(cfgSens) ? 2 : 4; }
+    private boolean hyper() { return "hyper".equals(cfgSens); }
+
+    private int typedThreshold() { return ("strict".equals(cfgSens) || hyper()) ? 2 : 4; }
 
     private int screenThreshold(boolean browser) {
         String s = cfgSens;
+        if ("hyper".equals(s)) return 4;
         if ("gentle".equals(s)) return 16;
         if ("strict".equals(s)) return browser ? 4 : 8;
         return browser ? 8 : 12;
+    }
+
+    /** Scores the text/description carried by the event itself (cheap, runs on the main thread). */
+    private void quickCheck(AccessibilityEvent e, boolean typed) {
+        StringBuilder sb = new StringBuilder();
+        List<CharSequence> parts = e.getText();
+        if (parts != null) for (CharSequence cs : parts) if (cs != null) sb.append(cs).append(' ');
+        CharSequence d = e.getContentDescription();
+        if (d != null) sb.append(d);
+        if (sb.length() < 3) return;
+        String text = sb.length() > 600 ? sb.substring(0, 600) : sb.toString();
+        String host = Blocklist.extractHost(text);
+        if (host != null && Blocklist.hostBlocked(host)) { trigger("browser"); return; }
+        int sc = Blocklist.score(text, false, typed);
+        int thr = hyper() ? 4 : "strict".equals(cfgSens) ? 8 : 12;
+        if (typed && sc >= (hyper() ? 4 : 8)) { trigger("screen"); return; }
+        if (sc >= thr + 4) trigger("screen");
     }
 
     private void handleTyped(AccessibilityEvent e) {
@@ -239,8 +267,9 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         if (overlay != null || SystemClock.elapsedRealtime() < cooldownUntil || !cfgProtection) return;
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (pm != null && !pm.isInteractive()) return;
+        Diag.scans++; Diag.scansAt = SystemClock.elapsedRealtime();
         AccessibilityNodeInfo root = getRootInActiveWindow();
-        if (root == null) return;
+        if (root == null) { scanWindows(); return; }
         try {
             CharSequence p = root.getPackageName();
             String pkg = p == null ? "" : p.toString();
@@ -263,19 +292,46 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             StringBuilder sb = new StringBuilder();
             collect(root, sb, new int[]{0}, 0);
             String text = sb.toString();
+            Diag.lastScanPkg = pkg;
             int hash = text.hashCode();
             if (hash == lastHash && pkg.equals(lastHashPkg) && textStrikes == 0) return; // nothing new since the last scan
             lastHash = hash; lastHashPkg = pkg;
             int thr = screenThreshold(browser), sc = Blocklist.score(text, false, false);
+            Diag.lastScanScore = sc;
             if (sc >= thr) {
-                // one odd frame is not enough: ordinary apps must show it in two scans in a row
-                if (browser || sc >= thr + 8 || ++textStrikes >= 2) { textStrikes = 0; trigger(browser ? "browser" : "screen"); }
+                // balanced/gentle/strict: ordinary apps must show it twice in a row. Hyper acts at once.
+                if (browser || hyper() || sc >= thr + 8 || ++textStrikes >= 2) { textStrikes = 0; trigger(browser ? "browser" : "screen"); }
             } else {
                 textStrikes = 0;
             }
         } finally {
             try { root.recycle(); } catch (Exception ignored) { }
         }
+    }
+
+    /** Fallback when the active window has no readable root: look at every visible window. */
+    private void scanWindows() {
+        List<android.view.accessibility.AccessibilityWindowInfo> ws;
+        try { ws = getWindows(); } catch (Throwable t) { return; }
+        if (ws == null) return;
+        StringBuilder sb = new StringBuilder();
+        for (android.view.accessibility.AccessibilityWindowInfo w : ws) {
+            AccessibilityNodeInfo r = null;
+            try {
+                r = w.getRoot();
+                if (r == null) continue;
+                CharSequence p = r.getPackageName();
+                if (p == null || isIgnored(p.toString())) continue;
+                collect(r, sb, new int[]{0}, 0);
+            } catch (Throwable ignored) {
+            } finally {
+                if (r != null) try { r.recycle(); } catch (Exception ignored) { }
+            }
+        }
+        if (sb.length() == 0) return;
+        int sc = Blocklist.score(sb.toString(), false, false);
+        Diag.lastScanScore = sc;
+        if (sc >= screenThreshold(false)) trigger("screen");
     }
 
     private void collect(AccessibilityNodeInfo n, StringBuilder sb, int[] count, int depth) {
@@ -332,6 +388,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         h.post(new Runnable() {
             @Override public void run() {
                 if (overlay != null || SystemClock.elapsedRealtime() < cooldownUntil) return;
+                Diag.triggers++;
                 Prefs.recordBlock(TazkiahAccessibilityService.this, cat);
                 showOverlay(false, Reminder.pick(TazkiahAccessibilityService.this, false));
             }
@@ -344,17 +401,23 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     };
     private final Runnable visualRunnable = new Runnable() { @Override public void run() { visualTick(); } };
 
+    private long visualBase() {
+        String s = cfgSens;
+        return "hyper".equals(s) ? 1100 : "strict".equals(s) ? 1800 : "gentle".equals(s) ? 3500 : 2500;
+    }
+
     private boolean visualEligible() {
-        if (Build.VERSION.SDK_INT < 30 || visualBroken || !cfgVisual || !cfgProtection || overlay != null) return false;
+        if (Build.VERSION.SDK_INT < 30 || visualBroken || !cfgVisual || !cfgProtection || overlay != null) { Diag.visState = !cfgVisual ? "off" : visualBroken ? "model failed" : "paused"; return false; }
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (pm != null && !pm.isInteractive()) return false;
         return !isIgnored(lastPkg);
     }
 
     private void ensureVisual() {
-        if (visualOn || bg == null || Build.VERSION.SDK_INT < 30 || visualBroken || !cfgVisual) return;
+        if (Build.VERSION.SDK_INT < 30) { Diag.visState = "needs Android 11+"; return; }
+        if (visualOn || bg == null || visualBroken || !cfgVisual) return;
         visualOn = true;
-        bg.postDelayed(visualRunnable, 1500);
+        bg.postDelayed(visualRunnable, 800);
     }
 
     private void nextVisual(long delay) {
@@ -366,7 +429,8 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     /** Runs on the background thread: one screenshot -> small model -> maybe block. */
     private void visualTick() {
         if (!visualEligible()) { visualOn = false; return; }
-        if (SystemClock.elapsedRealtime() < cooldownUntil) { nextVisual(1500); return; }
+        if (SystemClock.elapsedRealtime() < cooldownUntil) { nextVisual(1000); return; }
+        Diag.visState = "watching";
         try {
             takeScreenshot(Display.DEFAULT_DISPLAY, bgExec, new TakeScreenshotCallback() {
                 @Override public void onSuccess(ScreenshotResult r) {
@@ -383,10 +447,13 @@ public class TazkiahAccessibilityService extends AccessibilityService {
                         sw.recycle();
                     }
                     long took = SystemClock.elapsedRealtime() - t0;
-                    visualInterval = Math.max(2500, took * 8); // heavy device -> look less often
+                    visualInterval = Math.max(visualBase(), took * 5); // heavy device -> look less often
                     nextVisual(visualInterval);
                 }
-                @Override public void onFailure(int errorCode) { nextVisual(4000); }
+                @Override public void onFailure(int errorCode) {
+                    Diag.lastShotError = errorCode; Diag.visState = "screenshot error " + errorCode;
+                    nextVisual(errorCode == 3 ? 2500 : 4000);
+                }
             });
         } catch (Throwable t) {
             nextVisual(6000);
@@ -396,13 +463,15 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     private void evaluateVisual(Bitmap sw) {
         if (vg == null) vg = new VisualGuard();
         if (!vg.load(this)) { visualBroken = true; return; }
-        boolean strict = "strict".equals(cfgSens), gentle = "gentle".equals(cfgSens);
-        float sc = vg.analyze(sw, strict);
+        boolean hy = hyper(), strict = "strict".equals(cfgSens), gentle = "gentle".equals(cfgSens);
+        float sc = vg.analyze(sw, hy || strict, hy ? 3 : 2);
+        Diag.visScans++; Diag.visAt = SystemClock.elapsedRealtime();
         if (sc < 0) return; // unchanged screen
-        float hi = gentle ? 0.75f : strict ? 0.55f : 0.65f;
-        float lo = gentle ? 0.75f : strict ? 0.35f : 0.45f;
+        Diag.lastVisScore = sc;
+        float hi = hy ? 0.45f : gentle ? 0.75f : strict ? 0.55f : 0.65f;
+        float lo = hy ? 0.30f : gentle ? 0.75f : strict ? 0.35f : 0.45f;
         if (sc >= hi) { visualStrikes = 0; trigger("visual"); }
-        else if (sc >= lo) { if (++visualStrikes >= 2) { visualStrikes = 0; trigger("visual"); } }
+        else if (sc >= lo) { if (hy || ++visualStrikes >= 2) { visualStrikes = 0; trigger("visual"); } }
         else visualStrikes = 0;
     }
 

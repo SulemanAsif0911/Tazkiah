@@ -29,7 +29,7 @@
   /* ------------------------------------------------------------ data */
   function load() {
     S.status = json('getStatus', {}) || {};
-    S.set = json('getSettings', { protection: true, sensitivity: 'balanced', lang: 'both', guard: false, visual: true, daily: true, dailyHour: 21, dailyMin: 0, custom: '', trusted: [] }) || {};
+    S.set = json('getSettings', { protection: true, sensitivity: 'hyper', lang: 'both', guard: false, visual: true, daily: true, dailyHour: 21, dailyMin: 0, custom: '', trusted: [] }) || {};
     S.stats = json('getStats', { today: 0, total: 0, streak: 0, istighfar: 0, week: [], cats: {} }) || {};
     if (!S.rem.length) {
       var r = json('getReminders', { items: [] });
@@ -120,14 +120,15 @@
     $('#tab-reminders').innerHTML = h;
   }
 
-  var SENS = { gentle: 'Only clear links and searches trigger the screen.', balanced: 'Recommended. Clear searches, links and strongly explicit pages.', strict: 'Also reacts to milder words. May interrupt more often.' };
+  var SENS = { hyper: 'Maximum. Reacts instantly to any haram word, link or exposed-body image. May interrupt more; drop to Balanced if it does.', gentle: 'Only clear links and searches trigger the screen.', balanced: 'Recommended. Clear searches, links and strongly explicit pages.', strict: 'Also reacts to milder words. May interrupt more often.' };
   function sw(on, a) { return '<button class="sw ' + (on ? 'on' : '') + '" data-a="' + a + '" aria-pressed="' + (on ? 'true' : 'false') + '"></button>'; }
   function renderShield() {
     var s = S.set, nTrusted = (s.trusted || []).length;
     var h = '<h2 style="margin-top:14px">Shield settings</h2><div class="card"><div class="set"><div class="t"><h4>Protection</h4><p>Master switch for the Guard and DNS Shield.</p></div>' + sw(s.protection, 'tog-protection') + '</div>';
-    h += '<div style="margin-top:6px"><h4 style="margin:12px 0 0;font:600 14.5px var(--f-ui)">Sensitivity</h4><div class="seg">' + ['gentle', 'balanced', 'strict'].map(function (k) { return '<button class="' + (s.sensitivity === k ? 'on' : '') + '" data-a="sens" data-v="' + k + '">' + k[0].toUpperCase() + k.slice(1) + '</button>'; }).join('') + '</div><p class="muted small" style="margin:8px 2px 0">' + SENS[s.sensitivity] + '</p></div></div>';
+    h += '<div style="margin-top:6px"><h4 style="margin:12px 0 0;font:600 14.5px var(--f-ui)">Sensitivity</h4><div class="seg">' + ['hyper', 'strict', 'balanced', 'gentle'].map(function (k) { return '<button class="' + (s.sensitivity === k ? 'on' : '') + '" data-a="sens" data-v="' + k + '">' + k[0].toUpperCase() + k.slice(1) + '</button>'; }).join('') + '</div><p class="muted small" style="margin:8px 2px 0">' + SENS[s.sensitivity] + '</p></div></div>';
     var vis = (S.status.sdk || 30) >= 30;
     h += '<div class="card"><div class="set"><div class="t"><h4>Image guard</h4><p>' + (vis ? 'Looks at what is on screen (photos, reels, videos) with a small on-device model and blocks exposed bodies. Nothing is saved or sent.' : 'Needs Android 11 or newer. Not available on this phone.') + '</p></div>' + (vis ? sw(s.visual, 'tog-visual') : '') + '</div></div>';
+    h += '<div class="card" id="diag"><h4 style="margin:0 0 6px;font:600 14.5px var(--f-ui)">Live status</h4><div id="diagBody" class="muted small">Loading…</div><div class="actions" style="justify-content:flex-start"><button class="btn ghost sm" data-a="diag">Refresh</button><button class="btn sm" data-a="selftest">Run self-test</button></div></div>';
     h += '<div class="card"><div class="set"><div class="t"><h4>Think-twice guard</h4><p>If you try to switch the app off or uninstall it, a reminder and a 20-second pause appear first.</p></div>' + sw(s.guard, 'tog-guard') + '</div></div>';
     h += '<div class="card"><div class="row"><div class="grow"><h4 style="margin:0;font:600 14.5px var(--f-ui)">Trusted apps</h4><p class="muted small" style="margin:2px 0 0">' + (nTrusted ? nTrusted + ' app' + (nTrusted > 1 ? 's' : '') + ' are never scanned (e.g. a Qur\'an or study app).' : 'Pick apps that should never be scanned, like a Qur\'an or study app.') + '</p></div><button class="btn ghost sm" data-a="apps">Choose</button></div></div>';
     h += '<div class="card"><h4 style="margin:0 0 6px;font:600 14.5px var(--f-ui)">Your own blocked words</h4><textarea id="custom" class="selectable" placeholder="One word or phrase per line">' + esc(s.custom || '') + '</textarea><div class="actions" style="justify-content:flex-end"><button class="btn sm" data-a="save-custom">Save words</button></div></div>';
@@ -234,6 +235,8 @@
       case 'lang': S.set.lang = el.getAttribute('data-v'); setting('lang', S.set.lang); render(); break;
       case 'save-custom': setting('custom', $('#custom').value); S.set.custom = $('#custom').value; toast('Saved'); break;
       case 'apps': appsSheet(); break;
+      case 'diag': diag(); break;
+      case 'selftest': selfTest(); break;
       case 'trust':
         var p = el.getAttribute('data-p'), t = S.set.trusted || [], i = t.indexOf(p);
         if (i >= 0) t.splice(i, 1); else t.push(p);
@@ -255,8 +258,37 @@
     if (e.target.id === 'dtime' && e.target.value) { setting('dailyTime', e.target.value); var p = e.target.value.split(':'); S.set.dailyHour = +p[0]; S.set.dailyMin = +p[1]; toast('Reminder time saved'); }
   });
 
+  function ago(v) { return v < 0 ? 'never' : v + 's ago'; }
+  function diag() {
+    var b = $('#diagBody'); if (!b) return;
+    var d = json('getDiag', null);
+    if (!d) { b.textContent = 'Live status is available inside the app.'; return; }
+    var vis = d.sdk < 30 ? 'needs Android 11+' : d.visState + (d.visScans ? ' · ' + d.visScans + ' looks, last risk ' + d.visScore + '%' : '');
+    var hint = '';
+    if (d.shotError === 2) hint = ' (no accessibility access: turn the Guard off and on again)';
+    if (d.shotError === 3) hint = ' (too frequent, will retry)';
+    b.innerHTML = '<div>Guard: <b>' + (d.connected ? 'connected' : 'NOT running — enable it in Accessibility') + '</b></div>' +
+      '<div>Last event: ' + ago(d.eventAgo) + ' · ' + d.events + ' events</div>' +
+      '<div>Text scans: ' + d.scans + ' (last ' + ago(d.scanAgo) + ', score ' + d.scanScore + ')</div>' +
+      '<div>Image guard: ' + esc(vis) + esc(hint) + '</div>' +
+      (d.modelError ? '<div>Model error: ' + esc(d.modelError) + '</div>' : '') +
+      '<div>Blocks shown: ' + d.triggers + '</div>';
+  }
+  function selfTest() {
+    var b = $('#diagBody'); if (b) b.textContent = 'Running self-test…';
+    setTimeout(function () {
+      var r = json('selfTest', null);
+      if (!r) { toast('Self-test only runs inside the app'); return; }
+      if (b) b.innerHTML = '<div>Text engine: ' + (r.textTyped && r.textScreen && r.textClean ? 'OK' : 'PROBLEM') + '</div>' +
+        '<div>Image model: ' + (r.modelLoaded ? 'loaded in ' + r.loadMs + ' ms, ' + r.inferMs + ' ms per look' : 'FAILED — ' + esc(r.error || '')) + '</div>' +
+        '<div>Guard service: ' + (r.serviceConnected ? 'connected' : 'not connected') + '</div>';
+    }, 50);
+  }
+  setInterval(function () { if (S.tab === 'shield') diag(); }, 2000);
+
   function setTab(t) {
     S.tab = t;
+    if (t === 'shield') setTimeout(diag, 50);
     document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('on', x.id === 'tab-' + t); });
     document.querySelectorAll('#nav button').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-tab') === t); });
     window.scrollTo(0, 0);

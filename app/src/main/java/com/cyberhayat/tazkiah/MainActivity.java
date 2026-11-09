@@ -282,6 +282,11 @@ public class MainActivity extends Activity {
             } catch (Exception ignored) { }
         }
 
+        @JavascriptInterface public String getDiag() { return Diag.json(MainActivity.this); }
+
+        /** Blocking (runs the model once); the page calls it and shows the result when it returns. */
+        @JavascriptInterface public String selfTest() { return Diag.selfTest(MainActivity.this); }
+
         @JavascriptInterface public String getStats() { return Prefs.statsJson(MainActivity.this); }
         @JavascriptInterface public void resetStats() { Prefs.resetStats(MainActivity.this); }
         @JavascriptInterface public void istighfar() { Prefs.addIstighfar(MainActivity.this); }

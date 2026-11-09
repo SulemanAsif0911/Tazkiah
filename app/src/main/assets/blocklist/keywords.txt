@@ -1,15 +1,17 @@
-# Cyber Tazkiah keyword list.
-# S = strong (4 pts, counted on screen text AND typed text)
-# T = typed-only strong (4 pts, counted only when YOU type/search it; ignored in page text to avoid false alarms)
-# M = medium (1 pt, screen text only)
-# A trailing * means "starts with" (porn* matches pornhub). Otherwise whole word / phrase.
-# Edit freely: one term per line.  Lines starting with # are comments.
-# ---- English ----
+# Cyber Tazkiah keyword list (one term per line, '#' = comment).
+# S = strong   (4 pts) counted in screen text AND typed text
+# T = typed-only strong (4 pts) counted only when YOU type / search / tap it (ignored in page text)
+# M = medium   (1 pt)  screen + typed, adds up with other words
+# A trailing * means "starts with" (porn* matches pornhub). Otherwise whole word or whole phrase.
+# Edit freely.
+#
+# ===================== English: sites / platforms =====================
 S|porn*
 S|xxx
 S|hentai*
 S|nsfw
 S|onlyfans
+S|fansly
 S|chaturbate
 S|stripchat
 S|bongacams
@@ -27,64 +29,173 @@ S|tnaflix
 S|hqporner
 S|motherless
 S|rule34
-T|camgirl*
+S|jerkmate
+S|camsoda
+S|thothub
+S|fapello
+# ===================== English: explicit phrases =====================
 S|sex video*
-T|sex tape*
+S|sex tape*
 S|sex chat*
 S|sex cam*
-T|sex story
-T|sex stories
-T|free sex
-T|hot sex
+S|sex story
+S|sex stories
+S|sex scene*
+S|sex movie*
+S|sex photo*
+S|sex pics
+S|sex pictures
+S|free sex
+S|hot sex
+S|live sex
 S|desi sex
-T|sexy video*
-T|sexy girl*
+S|webcam sex
+S|camsex
+S|cam girl*
+S|camgirl*
+S|live cam*
+S|sexy video*
+S|sexy girls video*
+S|nude video*
+S|nude photo*
+S|nude pics
+S|nude pictures
+S|nude girl*
+S|nude leak*
+S|nudes leak*
+S|leaked nudes
+S|leaked mms
+S|mms leak*
+S|naked girl*
+S|naked video*
+S|naked photo*
+S|naked women
+S|naked woman
+S|adult site*
+S|adult website*
+S|adult video*
+S|adult movie*
+S|adult film*
+S|adult content
+S|18+ video*
+S|18+ movie*
+S|xxx video*
+S|erotic video*
+S|erotic stor*
+S|erotica
+S|hardcore sex
+S|porn star*
+S|pornstar*
+S|big boobs
+S|boobs video*
+S|blowjob*
+S|handjob*
+S|deepthroat
+S|anal sex
+S|oral sex
+S|cumshot*
+S|creampie
+S|gangbang
+S|bukkake
+S|upskirt
+S|nip slip
+S|dick pic*
+S|onlyfans leak*
+S|strip club
+S|stripper video*
+S|masturbat*
+# ===================== English: typed-only (searching for these is enough) =====================
 T|nude
 T|nudes
 T|naked
-T|erotic*
-T|milf
-T|blowjob*
-T|handjob*
-T|orgy
-T|masturbat*
-T|threesome
-T|creampie
-T|gangbang
-T|cumshot*
-T|bdsm
-T|pussy
 T|topless
+T|erotic*
+T|orgy
+T|pussy
 T|stripper*
-T|strip club
 T|escort girl*
-T|adult video*
-T|adult movie*
-T|leaked mms
-T|mms leak*
-T|nip slip
-T|dick pic*
+T|milf
+T|threesome
+T|bdsm
+T|incest
+T|voyeur
+T|sexting
+T|sext
+T|horny
+T|slut*
+T|whore*
+T|tits
+T|big ass
+T|thot
+T|twerk*
+T|nudist
+T|lewd
+T|lewds
+T|ecchi
 T|jerk off
+T|softcore
+T|hardcore
+T|camgirls
+T|hookup
+T|hook up
+T|casino
+T|betting
+T|gambling
+T|satta
+T|jua
+# ===================== English: medium (add up) =====================
 M|sex
 M|sexy
+M|sexual
 M|boobs
+M|booty
 M|lingerie
+M|bikini
+M|bikini girl*
+M|hot girl*
+M|hot girls
+M|hot video*
+M|hot model*
+M|18+
+M|escort*
 M|fetish*
 M|fap
-M|hot girl*
-M|hot video*
-M|bikini girl*
-M|18+
-M|adult content
-M|escort*
-M|hookup
-M|hook up
-M|onlyfans leak*
-# ---- Roman Urdu / Hindi ----
+M|thirst trap*
+M|bold scene*
+M|onlyfans
+M|nudity
+M|seductive
+M|undress*
+M|strip tease
+M|striptease
+# ===================== Gambling =====================
+S|online casino*
+S|sports betting
+S|betting app*
+S|betting site*
+S|bet365
+S|1xbet
+S|melbet
+S|parimatch
+S|mostbet
+S|betway
+S|dafabet
+S|satta matka
+S|matka result*
+S|slot machine*
+S|jackpot slots
+# ===================== Roman Urdu / Hindi =====================
 S|nangi
 S|nanga video*
+S|nangi video*
+S|nangi photo*
+S|nangi tasveer*
 S|chudai
 S|chodai
+S|chudai kahani*
+S|sex kahani*
+S|sexy kahani*
+S|garam kahani*
 S|blue film*
 S|bf film*
 S|mms video*
@@ -92,32 +203,64 @@ S|desi bhabhi
 S|bhabhi sex
 S|gandi video*
 S|gandi film*
-S|sexy kahani*
-M|randi
+S|gandi baatein
+S|kamasutra video*
+T|randi
+T|chut
+T|choot
+T|lund
+T|gaand
+T|nanga
+T|nangi
 M|garam video*
 M|garam girl*
-# ---- Urdu / Arabic / Persian script ----
+M|hot bhabhi
+M|item girl*
+# ===================== Urdu / Arabic / Persian script =====================
+# (letter forms are normalised: ک->ك  ی->ي  ہ->ه  etc. Do NOT add very short or common words.)
 S|سیکس
 S|سيكس
 S|سكس
 S|سیکسی
+S|سيكسي
 S|پورن
 S|پورنو
 S|بورن
 S|ننگی
 S|ننگی ویڈیو
+S|ننگی تصاویر
+S|گندی ویڈیو
+S|گندی فلم
+S|گندی فلمیں
+S|فحش ویڈیو
+S|فحش فلم
+S|فحش فلمیں
 S|چدائی
 S|اباحي
 S|اباحيه
 S|افلام اباحيه
 S|افلام سكس
-S|نيك
-M|ننگا
+S|فيديو سكس
+S|فيديوهات سكس
+S|مقاطع سكس
+S|صور عاريه
+S|بنات عاريات
+T|رنڈی
+T|چوت
+T|ننگے
+T|ننگا
+T|عاريه
 M|فحش
-M|عاريه
 M|عاري
-# ---- Hindi (Devanagari) ----
+M|جنسي
+M|جنسی
+# ===================== Hindi (Devanagari) =====================
 S|सेक्स
+S|सेक्स वीडियो
 S|पोर्न
 S|नंगी
+S|नंगी वीडियो
 S|चुदाई
+S|गंदी फिल्म
+T|रंडी
+T|नंगा

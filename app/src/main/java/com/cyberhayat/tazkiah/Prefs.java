@@ -26,8 +26,8 @@ final class Prefs {
     static void setProtection(Context c, boolean v) { sp(c).edit().putBoolean("protection", v).apply(); }
 
     /** gentle | balanced | strict */
-    static String sensitivity(Context c) { return sp(c).getString("sensitivity", "balanced"); }
-    static void setSensitivity(Context c, String v) { sp(c).edit().putString("sensitivity", v).apply(); }
+    static String sensitivity(Context c) { return sp(c).getString("sensitivity2", "hyper"); }
+    static void setSensitivity(Context c, String v) { sp(c).edit().putString("sensitivity2", v).apply(); }
 
     /** both | ur | en */
     static String lang(Context c) { return sp(c).getString("lang", "both"); }

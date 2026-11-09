@@ -18,15 +18,18 @@ import java.nio.FloatBuffer;
 import java.util.Collections;
 
 /**
- * Image guard: looks at a downscaled copy of the screen with a small on-device model
- * (NudeNet 320n, ONNX). It only reports "exposed body part" detections. Pixels never leave the phone
- * and nothing is stored. Not for anything except the score; the bitmap is discarded right after.
+ * Image guard: checks a downscaled copy of the screen with a small on-device model (NudeNet 320n, ONNX).
+ * Pixels never leave the phone and nothing is stored; the bitmap is thrown away right after scoring.
  */
 final class VisualGuard {
     private static final int N = 320;
     // NudeNet class ids
-    private static final int[] EXPLICIT = {2, 3, 4, 6, 14};  // buttocks, female breast, female genitalia, anus, male genitalia (exposed)
-    private static final int[] STRICT_EXTRA = {11, 13};      // armpits, belly (exposed)
+    private static final int[] EXPLICIT = {2, 3, 4, 6, 14};   // buttocks, female breast, female genitalia, anus, male genitalia (exposed)
+    private static final int[] SKIN = {13, 11};               // belly, armpits (exposed)
+    private static final int[] FEMALE = {1, 16, 17, 0};       // female face, breast/buttocks/genitalia (covered)
+
+    static volatile String lastError = "";
+    static volatile long lastInferMs = 0;
 
     private OrtEnvironment env;
     private OrtSession session;
@@ -38,7 +41,6 @@ final class VisualGuard {
     private final Canvas canvas = new Canvas(tile);
     private final Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
     private final int[] px = new int[N * N];
-    private final float[] in = new float[3 * N * N];
 
     synchronized boolean load(Context c) {
         if (session != null) return true;
@@ -55,9 +57,11 @@ final class VisualGuard {
             o.setIntraOpNumThreads(2);
             session = env.createSession(bo.toByteArray(), o);
             inName = session.getInputNames().iterator().next();
+            lastError = "";
             return true;
         } catch (Throwable t) {
             failed = true;
+            lastError = t.getClass().getSimpleName() + ": " + String.valueOf(t.getMessage());
             return false;
         }
     }
@@ -68,60 +72,71 @@ final class VisualGuard {
     }
 
     /**
-     * @return highest score (0..1) of an exposed-anatomy class, or -1 when the screen is unchanged / the model is unavailable.
+     * @param suggestive also react to bare midriff/armpits on a woman (strict + hyper modes)
+     * @param tallTiles  how many overlapping tiles to use on a tall phone screen (2 or 3)
+     * @return risk 0..1, or -1 when the screen is unchanged or the model is unavailable
      */
-    synchronized float analyze(Bitmap full, boolean strict) {
+    synchronized float analyze(Bitmap full, boolean suggestive, int tallTiles) {
         if (session == null || full == null) return -1f;
         int w = full.getWidth(), h = full.getHeight();
         Rect[] tiles;
-        if (h > w * 1.3f) { // tall phone screen: two overlapping tiles keep faces/bodies large enough for the model
-            int th = (int) (h * 0.55f);
-            tiles = new Rect[]{new Rect(0, 0, w, th), new Rect(0, h - th, w, h)};
+        if (h > w * 1.3f) {
+            if (tallTiles >= 3) {
+                int th = (int) (h * 0.42f);
+                int mid = (int) (h * 0.29f);
+                tiles = new Rect[]{new Rect(0, 0, w, th), new Rect(0, mid, w, mid + th), new Rect(0, h - th, w, h)};
+            } else {
+                int th = (int) (h * 0.55f);
+                tiles = new Rect[]{new Rect(0, 0, w, th), new Rect(0, h - th, w, h)};
+            }
         } else {
             tiles = new Rect[]{new Rect(0, 0, w, h)};
         }
-        float best = 0f;
+        final int plane = N * N;
+        float[][] data = new float[tiles.length][3 * plane];
         long sig = 17;
-        boolean any = false;
-        float[][] results = new float[tiles.length][];
         for (int t = 0; t < tiles.length; t++) {
             Rect r = tiles[t];
             float sc = N / (float) Math.max(r.width(), r.height());
             canvas.drawColor(Color.BLACK);
             canvas.drawBitmap(full, r, new RectF(0, 0, r.width() * sc, r.height() * sc), paint);
             tile.getPixels(px, 0, N, 0, 0, N, N);
-            for (int i = 0; i < px.length; i += 211) sig = sig * 31 + px[i];
-            results[t] = null;
-            // fill CHW RGB 0..1
-            final int plane = N * N;
+            for (int i = 0; i < px.length; i += 197) sig = sig * 31 + px[i];
+            float[] d = data[t];
             for (int i = 0; i < plane; i++) {
                 int p = px[i];
-                in[i] = ((p >> 16) & 255) / 255f;
-                in[plane + i] = ((p >> 8) & 255) / 255f;
-                in[2 * plane + i] = (p & 255) / 255f;
+                d[i] = ((p >> 16) & 255) / 255f;
+                d[plane + i] = ((p >> 8) & 255) / 255f;
+                d[2 * plane + i] = (p & 255) / 255f;
             }
-            // unchanged screen? (checked after both tiles below) -> still need the pixels, so run lazily
-            results[t] = in.clone();
         }
         if (sig == lastSig) return -1f;
         lastSig = sig;
-        for (int t = 0; t < tiles.length; t++) {
-            float s = run(results[t], strict);
-            if (s >= 0) { any = true; if (s > best) best = s; }
+        long t0 = System.nanoTime();
+        float best = -1f;
+        for (float[] d : data) {
+            float s = run(d, suggestive);
+            if (s > best) best = s;
         }
-        return any ? best : -1f;
+        lastInferMs = (System.nanoTime() - t0) / 1000000L;
+        return best;
     }
 
-    private float run(float[] data, boolean strict) {
+    private float run(float[] data, boolean suggestive) {
         try (OnnxTensor tensor = OnnxTensor.createTensor(env, FloatBuffer.wrap(data), new long[]{1, 3, N, N});
              OrtSession.Result res = session.run(Collections.singletonMap(inName, tensor))) {
-            float[][][] out = (float[][][]) res.get(0).getValue(); // [1][22][2100]
-            float[][] o = out[0];
-            float best = 0f;
-            for (int c : EXPLICIT) best = Math.max(best, max(o[4 + c]));
-            if (strict) for (int c : STRICT_EXTRA) best = Math.max(best, max(o[4 + c]));
-            return best;
+            float[][] o = ((float[][][]) res.get(0).getValue())[0]; // [22][2100]
+            float risk = 0f;
+            for (int c : EXPLICIT) risk = Math.max(risk, max(o[4 + c]));
+            if (suggestive) {
+                float female = 0f, skin = 0f;
+                for (int c : FEMALE) female = Math.max(female, max(o[4 + c]));
+                for (int c : SKIN) skin = Math.max(skin, max(o[4 + c]));
+                if (female >= 0.40f) risk = Math.max(risk, skin * 0.92f); // bare midriff / armpits with a woman in frame
+            }
+            return risk;
         } catch (Throwable t) {
+            lastError = t.getClass().getSimpleName() + ": " + String.valueOf(t.getMessage());
             return -1f;
         }
     }
