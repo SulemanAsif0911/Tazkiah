@@ -15,7 +15,7 @@ final class Diag {
     static volatile long events, eventsAt, scans, scansAt, visScans, visAt, triggers;
     static volatile int lastScanScore = -1, lastShotError = 0;
     static volatile float lastVisScore = -1f;
-    static volatile String visState = "idle", lastScanPkg = "";
+    static volatile String visState = "idle", lastScanPkg = "", lastReason = "";
 
     static String json(Context c) {
         try {
@@ -38,6 +38,7 @@ final class Diag {
             o.put("modelError", VisualGuard.lastError);
             o.put("inferMs", VisualGuard.lastInferMs);
             o.put("triggers", triggers);
+            o.put("reason", lastReason);
             return o.toString();
         } catch (Exception e) { return "{}"; }
     }

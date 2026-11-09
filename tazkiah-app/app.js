@@ -120,7 +120,7 @@
     $('#tab-reminders').innerHTML = h;
   }
 
-  var SENS = { hyper: 'Maximum. Reacts instantly to any haram word, link or exposed-body image. May interrupt more; drop to Balanced if it does.', gentle: 'Only clear links and searches trigger the screen.', balanced: 'Recommended. Clear searches, links and strongly explicit pages.', strict: 'Also reacts to milder words. May interrupt more often.' };
+  var SENS = { hyper: 'Maximum. Reacts fast to haram words, links and exposed-body images. Drop to Balanced if it interrupts too much.', gentle: 'Only clear links and searches trigger the screen.', balanced: 'Recommended. Clear searches, links and strongly explicit pages.', strict: 'Also reacts to milder words. May interrupt more often.' };
   function sw(on, a) { return '<button class="sw ' + (on ? 'on' : '') + '" data-a="' + a + '" aria-pressed="' + (on ? 'true' : 'false') + '"></button>'; }
   function renderShield() {
     var s = S.set, nTrusted = (s.trusted || []).length;
@@ -272,7 +272,7 @@
       '<div>Text scans: ' + d.scans + ' (last ' + ago(d.scanAgo) + ', score ' + d.scanScore + ')</div>' +
       '<div>Image guard: ' + esc(vis) + esc(hint) + '</div>' +
       (d.modelError ? '<div>Model error: ' + esc(d.modelError) + '</div>' : '') +
-      '<div>Blocks shown: ' + d.triggers + '</div>';
+      '<div>Blocks shown: ' + d.triggers + (d.reason ? '<br>Last block: <b>' + esc(d.reason) + '</b>' : '') + '</div>';
   }
   function selfTest() {
     var b = $('#diagBody'); if (b) b.textContent = 'Running self-test…';

@@ -30,6 +30,9 @@ final class VisualGuard {
 
     static volatile String lastError = "";
     static volatile long lastInferMs = 0;
+    /** best explicit / suggestive score of the latest look (set by analyze) */
+    float lastExplicit, lastSuggest;
+    private float curExp, curSug;
 
     private OrtEnvironment env;
     private OrtSession session;
@@ -76,7 +79,9 @@ final class VisualGuard {
      * @param tallTiles  how many overlapping tiles to use on a tall phone screen (2 or 3)
      * @return risk 0..1, or -1 when the screen is unchanged or the model is unavailable
      */
-    synchronized float analyze(Bitmap full, boolean suggestive, int tallTiles) {
+    synchronized float analyze(Bitmap full, boolean suggestive, int tallTiles) { return analyze(full, suggestive, tallTiles, false); }
+
+    synchronized float analyze(Bitmap full, boolean suggestive, int tallTiles, boolean force) {
         if (session == null || full == null) return -1f;
         int w = full.getWidth(), h = full.getHeight();
         Rect[] tiles;
@@ -110,13 +115,16 @@ final class VisualGuard {
                 d[2 * plane + i] = (p & 255) / 255f;
             }
         }
-        if (sig == lastSig) return -1f;
+        if (sig == lastSig && !force) return -1f;
         lastSig = sig;
         long t0 = System.nanoTime();
         float best = -1f;
+        lastExplicit = 0f; lastSuggest = 0f;
         for (float[] d : data) {
             float s = run(d, suggestive);
             if (s > best) best = s;
+            lastExplicit = Math.max(lastExplicit, curExp);
+            lastSuggest = Math.max(lastSuggest, curSug);
         }
         lastInferMs = (System.nanoTime() - t0) / 1000000L;
         return best;
@@ -128,11 +136,12 @@ final class VisualGuard {
             float[][] o = ((float[][][]) res.get(0).getValue())[0]; // [22][2100]
             float risk = 0f;
             for (int c : EXPLICIT) risk = Math.max(risk, max(o[4 + c]));
+            curExp = risk; curSug = 0f;
             if (suggestive) {
                 float female = 0f, skin = 0f;
                 for (int c : FEMALE) female = Math.max(female, max(o[4 + c]));
                 for (int c : SKIN) skin = Math.max(skin, max(o[4 + c]));
-                if (female >= 0.40f) risk = Math.max(risk, skin * 0.92f); // bare midriff / armpits with a woman in frame
+                if (female >= 0.50f && skin >= 0.50f) { curSug = skin; risk = Math.max(risk, skin * 0.92f); } // bare midriff / armpits with a woman in frame
             }
             return risk;
         } catch (Throwable t) {

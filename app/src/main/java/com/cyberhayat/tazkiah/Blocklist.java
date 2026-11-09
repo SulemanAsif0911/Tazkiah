@@ -131,17 +131,33 @@ final class Blocklist {
      * typed=false (text read from the screen) ignores the typed-only tier, so ordinary captions,
      * ads and articles that merely contain a word like "nude" do not trigger.
      */
+    static volatile String lastMatch = "";
+
     static int score(String text, boolean leet, boolean typed) {
         if (terms == null || text == null || text.isEmpty()) return 0;
         String a = norm(text, false);
         String b = leet ? norm(text, true) : null;
         int s = 0;
+        String best = ""; int bestPts = 0;
         for (Term t : terms) {
             if (t.typedOnly && !typed) continue;
-            if (matches(a, t) || (b != null && matches(b, t))) s += t.pts;
+            String hay = matches(a, t) ? a : (b != null && matches(b, t)) ? b : null;
+            if (hay == null) continue;
+            s += t.pts;
+            if (t.pts > bestPts) { bestPts = t.pts; best = t.t; }
+            // a strong word repeated 3+ times (a page that is full of it) counts double
+            if (t.pts >= 4 && !typed && count(hay, t) >= 3) s += 4;
         }
-        for (Term t : custom) if (matches(a, t) || (b != null && matches(b, t))) s += t.pts;
+        for (Term t : custom) if (matches(a, t) || (b != null && matches(b, t))) { s += t.pts; if (t.pts >= bestPts) best = t.t; }
+        if (s > 0) lastMatch = best;
         return s;
+    }
+
+    private static int count(String padded, Term t) {
+        String needle = t.prefix ? " " + t.t : " " + t.t + " ";
+        int n = 0, i = 0;
+        while ((i = padded.indexOf(needle, i)) >= 0 && n < 5) { n++; i += needle.length(); }
+        return n;
     }
 
     static boolean hostBlocked(String host) {

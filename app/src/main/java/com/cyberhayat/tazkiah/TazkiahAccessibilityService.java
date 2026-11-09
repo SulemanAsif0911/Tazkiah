@@ -206,7 +206,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         // look at whatever text the event itself carries (clicked/focused/scrolled items), instantly
         if (type == AccessibilityEvent.TYPE_VIEW_CLICKED || type == AccessibilityEvent.TYPE_VIEW_FOCUSED
                 || type == AccessibilityEvent.TYPE_VIEW_SCROLLED || type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
-            quickCheck(e, type != AccessibilityEvent.TYPE_VIEW_SCROLLED && type != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);
+            quickCheck(e, type == AccessibilityEvent.TYPE_VIEW_CLICKED); // only a tap counts as "chosen"; focus/scroll are automatic
         }
         if (type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED || type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED
                 || type == AccessibilityEvent.TYPE_VIEW_SCROLLED || type == AccessibilityEvent.TYPE_VIEW_CLICKED
@@ -225,7 +225,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
 
     private int screenThreshold(boolean browser) {
         String s = cfgSens;
-        if ("hyper".equals(s)) return 4;
+        if ("hyper".equals(s)) return 6;
         if ("gentle".equals(s)) return 16;
         if ("strict".equals(s)) return browser ? 4 : 8;
         return browser ? 8 : 12;
@@ -241,11 +241,13 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         if (sb.length() < 3) return;
         String text = sb.length() > 600 ? sb.substring(0, 600) : sb.toString();
         String host = Blocklist.extractHost(text);
-        if (host != null && Blocklist.hostBlocked(host)) { trigger("browser"); return; }
+        if (host != null && Blocklist.hostBlocked(host)) { Diag.lastReason = "link: " + host; trigger("browser"); return; }
         int sc = Blocklist.score(text, false, typed);
-        int thr = hyper() ? 4 : "strict".equals(cfgSens) ? 8 : 12;
-        if (typed && sc >= (hyper() ? 4 : 8)) { trigger("screen"); return; }
-        if (sc >= thr + 4) trigger("screen");
+        if (sc <= 0) return;
+        int thr = hyper() ? 8 : "strict".equals(cfgSens) ? 12 : 16;
+        if ((typed && sc >= (hyper() ? 4 : 8)) || sc >= thr) {
+            Diag.lastReason = (typed ? "tap" : "item") + ": " + Blocklist.lastMatch; trigger("screen");
+        }
     }
 
     private void handleTyped(AccessibilityEvent e) {
@@ -257,8 +259,8 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         if (text.length() < 3) return;
         if (text.length() > 300) text = text.substring(text.length() - 300);
         String host = Blocklist.extractHost(text);
-        if (host != null && Blocklist.hostBlocked(host)) { trigger("browser"); return; }
-        if (Blocklist.score(text) >= typedThreshold()) trigger("search");
+        if (host != null && Blocklist.hostBlocked(host)) { Diag.lastReason = "typed link: " + host; trigger("browser"); return; }
+        if (Blocklist.score(text) >= typedThreshold()) { Diag.lastReason = "typed: " + Blocklist.lastMatch; trigger("search"); }
     }
 
     // ------------------------------------------------------------------ screen scan
@@ -284,7 +286,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
                         CharSequence t = bar.getText();
                         if (t != null) {
                             String host = Blocklist.extractHost(t.toString());
-                            if (host != null && Blocklist.hostBlocked(host)) { trigger("browser"); return; }
+                            if (host != null && Blocklist.hostBlocked(host)) { Diag.lastReason = "address bar: " + host; trigger("browser"); return; }
                         }
                     }
                 }
@@ -300,7 +302,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             Diag.lastScanScore = sc;
             if (sc >= thr) {
                 // balanced/gentle/strict: ordinary apps must show it twice in a row. Hyper acts at once.
-                if (browser || hyper() || sc >= thr + 8 || ++textStrikes >= 2) { textStrikes = 0; trigger(browser ? "browser" : "screen"); }
+                if (browser || sc >= thr + (hyper() ? 6 : 8) || ++textStrikes >= 2) { textStrikes = 0; Diag.lastReason = pkg + ": " + Blocklist.lastMatch + " (" + sc + ")"; trigger(browser ? "browser" : "screen"); }
             } else {
                 textStrikes = 0;
             }
@@ -331,7 +333,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         if (sb.length() == 0) return;
         int sc = Blocklist.score(sb.toString(), false, false);
         Diag.lastScanScore = sc;
-        if (sc >= screenThreshold(false)) trigger("screen");
+        if (sc >= screenThreshold(false) + 4) { Diag.lastReason = "window: " + Blocklist.lastMatch; trigger("screen"); }
     }
 
     private void collect(AccessibilityNodeInfo n, StringBuilder sb, int[] count, int depth) {
@@ -464,14 +466,18 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         if (vg == null) vg = new VisualGuard();
         if (!vg.load(this)) { visualBroken = true; return; }
         boolean hy = hyper(), strict = "strict".equals(cfgSens), gentle = "gentle".equals(cfgSens);
-        float sc = vg.analyze(sw, hy || strict, hy ? 3 : 2);
+        float sc = vg.analyze(sw, hy || strict, hy ? 3 : 2, visualStrikes > 0);
         Diag.visScans++; Diag.visAt = SystemClock.elapsedRealtime();
         if (sc < 0) return; // unchanged screen
         Diag.lastVisScore = sc;
-        float hi = hy ? 0.45f : gentle ? 0.75f : strict ? 0.55f : 0.65f;
-        float lo = hy ? 0.30f : gentle ? 0.75f : strict ? 0.35f : 0.45f;
-        if (sc >= hi) { visualStrikes = 0; trigger("visual"); }
-        else if (sc >= lo) { if (hy || ++visualStrikes >= 2) { visualStrikes = 0; trigger("visual"); } }
+        float ex = vg.lastExplicit, sg = vg.lastSuggest;
+        float exHi = hy ? 0.40f : gentle ? 0.75f : strict ? 0.55f : 0.65f;
+        float exLo = hy ? 0.28f : gentle ? 0.75f : strict ? 0.35f : 0.45f;
+        float sgHi = hy ? 0.55f : strict ? 0.65f : 2f; // suggestive (bare midriff/armpits on a woman) only in hyper/strict
+        if (ex >= exHi) { visualStrikes = 0; Diag.lastReason = "image: exposed " + Math.round(ex * 100) + "%"; trigger("visual"); }
+        else if (ex >= exLo || sg >= sgHi) {
+            if (++visualStrikes >= 2) { visualStrikes = 0; Diag.lastReason = ex >= exLo ? "image: likely exposed " + Math.round(ex * 100) + "%" : "image: bare skin " + Math.round(sg * 100) + "%"; trigger("visual"); }
+        }
         else visualStrikes = 0;
     }
 
