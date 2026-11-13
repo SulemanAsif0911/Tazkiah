@@ -1,0 +1,387 @@
+# Cyber Tazkiah vulgarity list (gaaliyan / foul language / abusive slurs) used by "Clean feed".
+# P = strong foul word or slur (2 pts)   Q = milder rude word (1 pt)   trailing * = starts with
+# Whole words only (multi-word phrases match as a phrase). Add more freely.
+# Islamic basis: fahsh / badha'ah (obscene, foul-mouthed speech) and sabb (reviling) - Tirmidhi 1977, Bukhari 6018, Bukhari 48.
+# English and Hindi entries partly adapted from LDNOOBW "List of Dirty, Naughty, Obscene, and Otherwise Bad Words"
+# (https://github.com/LDNOOBW), CC BY 4.0 - see licenses/LDNOOBW-LICENSE-CC-BY-4.0.txt
+# ---- English
+P|fuck*
+P|motherfuck*
+P|mofo
+P|fck
+P|fack
+P|f ck
+P|sh t
+P|b tch
+P|fvck
+P|fuc
+P|a hole
+P|fuk*
+P|fcuk
+P|phuck
+P|shit*
+P|bullshit
+P|horseshit
+P|dipshit
+P|bitch*
+P|biatch
+P|bastard*
+P|asshole*
+P|arsehole*
+P|dickhead*
+Q|dick
+Q|dicks
+Q|cock
+Q|cocks
+P|cocksucker
+P|cunt*
+P|whore*
+P|slut*
+P|sluts
+P|pussy
+P|pussies
+P|twat*
+P|wank*
+P|wanker*
+P|tosser
+P|bollocks
+P|jackass
+P|dumbass
+P|dumbfuck
+P|douche*
+P|douchebag
+P|jizz*
+Q|cum
+P|cumshot*
+P|cumming
+P|blowjob*
+P|handjob*
+P|rimjob
+P|titties
+Q|tits
+Q|tit
+P|clit*
+P|dildo*
+P|butthole*
+Q|anus
+P|fag
+P|faggot*
+P|fags
+P|dyke
+P|tranny
+P|shemale
+P|nigga
+P|nigger*
+P|niggas
+P|kike
+P|paki
+P|spic
+P|wetback
+P|raghead
+P|towelhead
+Q|coon
+P|beaner
+P|darkie
+P|jigaboo
+P|chink
+P|gook
+P|retard*
+P|spastic
+Q|mong
+Q|stfu
+Q|wtf
+Q|wth
+Q|crap
+Q|damn
+Q|goddamn
+Q|idiot
+Q|moron
+Q|bloody
+Q|bugger
+Q|piss*
+Q|pissed
+Q|ass
+Q|arse
+Q|suck
+Q|sucks
+Q|sucker
+Q|boob
+Q|boobs
+Q|horny
+Q|hooker
+Q|slag
+Q|skank
+Q|jerk
+Q|screwed
+Q|shitty
+Q|hoe
+Q|thot
+# ---- Roman Urdu / Hindi
+P|maa ki chut
+P|maa ke lode
+P|teri maa ki
+P|teri maa ka
+P|teri behan ki
+P|teri behen ki
+P|teri bhen ki
+P|suar ke lund
+P|maa chod
+P|behen chod
+P|behn chod
+P|bhen chod
+P|madar chod
+P|gaand mara
+P|madarchod
+P|maderchod
+P|madarchod*
+P|madarchud
+P|madherchod
+P|maachod
+P|behenchod
+P|behanchod
+P|behnchod
+P|bhenchod
+P|bhenchod*
+P|bahenchod
+P|bhosdi*
+P|bhosdike
+P|bhosdika
+P|bhosda
+P|bhosada
+P|bhosad
+P|bsdk
+P|mkc
+P|bkl
+P|bkc
+P|chutiya*
+P|chutia
+P|chutiye
+P|chutiyapa
+P|chootiya
+P|chootia
+P|chut
+P|choot
+P|chutmarike
+P|chutmar
+P|chudai
+P|chudwa
+P|gandu
+P|gaandu
+P|gandfattu
+P|gaand
+P|gand
+P|gandmara
+P|lund
+P|lunn
+P|lauda
+P|lawda
+P|lawde
+P|lavda
+P|lavde
+P|lavdu
+P|loda
+Q|lode
+P|lodu
+P|randi*
+P|raand
+P|raandi
+P|randwa
+P|randapa
+P|kanjri
+P|kanjar
+P|kanjari
+P|kanjarkhana
+P|haramzada
+P|haramzadi
+P|haramzade
+P|harami*
+P|haramkhor
+P|gashti
+P|gasti
+P|ghasti
+P|bhadwa
+P|bhadwe
+P|bhadwi
+P|bhadva
+P|bhadve
+P|dalla
+Q|dalal
+P|tatti
+P|tatte
+Q|tharki
+P|najayaz
+P|jhant
+P|jhantu
+P|hijda
+P|hijde
+P|bhangi
+P|chinal
+P|chinaal
+P|randikhana
+P|mutthal
+P|mutth
+Q|kamina
+Q|kameena
+Q|kamine
+Q|kameeni
+Q|kaminey
+Q|kutta
+Q|kutte
+Q|kuttay
+Q|kutay
+Q|kutti
+Q|kuttiya
+Q|saala
+Q|saali
+Q|sala
+Q|sali
+Q|bakwas
+Q|ullu
+Q|pagal
+Q|gadha
+Q|gadhay
+Q|nikamma
+Q|nalayak
+Q|badtameez
+Q|besharam
+Q|beghairat
+Q|behaya
+Q|behuda
+Q|bewakoof
+Q|bewaqoof
+Q|dhakkan
+Q|nalaik
+Q|jahil
+Q|suar
+Q|khinzeer
+Q|khotay
+Q|mc
+Q|bc
+Q|maal
+Q|hawas
+Q|khusra
+Q|hijra
+# ---- Urdu script
+P|ماں کی چوت
+P|کتے کی اولاد
+P|کتی کی اولاد
+P|سور کا بچہ
+P|سور کی اولاد
+P|تیری ماں کی
+P|تیری بہن کی
+P|تیری ماں کا
+P|مادر چود
+P|بہن چود
+P|بھن چود
+P|ماں چود
+P|حرام زادہ
+P|حرام خور
+P|مادرچود
+P|مادرچد
+P|بہنچود
+P|بھنچود
+P|چوتیا
+P|چوتیے
+P|چوتیہ
+P|چوت
+P|گانڈو
+P|گانڈ
+P|لنڈ
+P|لوڑا
+P|لوڑے
+P|لوڑو
+P|رنڈی
+P|رنڈیاں
+P|رنڈوا
+P|کنجر
+P|کنجری
+P|کنجرخانہ
+P|بھڑوا
+P|بھڑوے
+P|بھڑوی
+P|گشتی
+P|حرامی
+P|حرامزادہ
+P|حرامزادی
+P|حرامزادے
+P|حرامخور
+P|بھوسڑی
+P|بھوسڑا
+P|ہیجڑے
+P|ٹھرکی
+P|دلال
+P|بھنگی
+Q|بے شرم
+Q|بے غیرت
+Q|بے حیا
+Q|بے وقوف
+Q|کمینہ
+Q|کمینی
+Q|کمینے
+Q|کتا
+Q|کتے
+Q|کتی
+Q|کتیا
+Q|سالا
+Q|سالی
+Q|بکواس
+Q|بیہودہ
+Q|بدتمیز
+Q|بیوقوف
+Q|گدھا
+Q|گدھے
+Q|الو
+Q|پاگل
+Q|نکما
+Q|نالائق
+Q|ڈھکن
+Q|گھٹیا
+Q|ذلیل
+Q|کھوتا
+Q|کھوتے
+Q|خنزیر
+# ---- Devanagari
+P|कुत्ते की औलाद
+P|सुअर की औलाद
+P|मां की चूत
+P|तेरी मां की
+P|बहन चोद
+P|मादरचोद
+P|बहनचोद
+P|भेनचोद
+P|चूतिया
+P|चुतिया
+P|चूत
+P|गांडू
+P|गांड
+P|लौड़ा
+P|लंड
+P|लौडा
+P|भोसड़ी
+P|भोसड़ीके
+P|भोसड़ा
+P|रंडी
+P|रांड
+P|हरामी
+P|हरामजादा
+P|हरामज़ादा
+P|कमीना
+P|कमीने
+P|भड़वा
+P|भड़वे
+P|छक्का
+P|हिजड़ा
+P|झाँट
+P|झांटू
+Q|साला
+Q|साली
+Q|कुत्ता
+Q|कुत्ते
+Q|बकवास
+Q|बेशर्म
+Q|बेवकूफ
+Q|गधा
+Q|उल्लू
+Q|निकम्मा
+Q|ठरकी
+Q|माल

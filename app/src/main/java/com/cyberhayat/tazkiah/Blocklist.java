@@ -22,6 +22,7 @@ final class Blocklist {
 
     private static volatile List<Term> terms;
     private static volatile List<Term> custom = new ArrayList<>();
+    private static volatile List<Term> vulgar = new ArrayList<>();
     private static volatile Set<String> domains;
 
     // substrings that are unambiguous inside a hostname
@@ -46,6 +47,19 @@ final class Blocklist {
                 String n = norm(raw, false).trim();
                 if (!n.isEmpty()) t.add(new Term(n, prefix, pts, typedOnly));
             }
+            List<Term> v = new ArrayList<>();
+            try {
+                for (String line : readLines(c, "blocklist/profanity.txt")) {
+                    if (line.length() < 3 || line.charAt(0) == '#' || line.charAt(1) != '|') continue;
+                    int pts = line.charAt(0) == 'Q' ? 1 : 2;
+                    String raw = line.substring(2).trim();
+                    boolean prefix = raw.endsWith("*");
+                    if (prefix) raw = raw.substring(0, raw.length() - 1);
+                    String n = norm(raw, false).trim();
+                    if (!n.isEmpty()) v.add(new Term(n, prefix, pts, false));
+                }
+            } catch (Exception ignored) { }
+            vulgar = v;
             for (String line : readLines(c, "blocklist/domains.txt")) {
                 line = line.trim().toLowerCase(Locale.ROOT);
                 if (!line.isEmpty() && line.charAt(0) != '#') d.add(line);
@@ -151,6 +165,16 @@ final class Blocklist {
         for (Term t : custom) if (matches(a, t) || (b != null && matches(b, t))) { s += t.pts; if (t.pts >= bestPts) best = t.t; }
         if (s > 0) lastMatch = best;
         return s;
+    }
+
+    /** Foul-language terms found in the text (distinct). Each Term carries its points (P=2, Q=1). */
+    static List<Term> vulgarHits(String text) {
+        List<Term> out = new ArrayList<>();
+        if (text == null || text.isEmpty() || vulgar.isEmpty()) return out;
+        String a = norm(text, false);
+        String b = norm(text, true); // f@ck, sh!t, b1tch ...
+        for (Term t : vulgar) if (matches(a, t) || (!b.equals(a) && matches(b, t))) out.add(t);
+        return out;
     }
 
     private static int count(String padded, Term t) {

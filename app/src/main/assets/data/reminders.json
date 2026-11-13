@@ -695,6 +695,146 @@
    "grade": "Hasan Sahih",
    "hook_ur": "شک والی بات چھوڑ کر بے شک والی اختیار کیجئے۔",
    "hook_en": "Leave what makes you doubt for what does not."
+  },
+  {
+   "id": "q23-3",
+   "type": "ayah",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "وَالَّذِينَ هُمْ عَنِ اللَّغْوِ مُّعْرِضُونَ",
+   "ur": "اور جو لغو (فضول اور بے ہودہ) باتوں سے منہ موڑے رکھتے ہیں۔",
+   "en": "And they who turn away from ill speech.",
+   "ref": "Surah Al-Mu'minun 23:3",
+   "grade": "Qur'an",
+   "hook_ur": "کامیاب مومن بے ہودہ باتوں سے منہ موڑ لیتے ہیں۔",
+   "hook_en": "The successful believers turn away from vulgar talk."
+  },
+  {
+   "id": "q25-72",
+   "type": "ayah",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "وَالَّذِينَ لَا يَشْهَدُونَ الزُّورَ وَإِذَا مَرُّوا بِاللَّغْوِ مَرُّوا كِرَامًا",
+   "ur": "اور جو جھوٹی گواہی نہیں دیتے، اور جب کسی بے ہودہ چیز کے پاس سے گزرتے ہیں تو شرافت سے گزر جاتے ہیں۔",
+   "en": "And those who do not witness falsehood, and when they pass by ill speech, they pass by with dignity.",
+   "ref": "Surah Al-Furqan 25:72",
+   "grade": "Qur'an",
+   "hook_ur": "بے ہودگی کے پاس سے وقار کے ساتھ گزر جائیے۔",
+   "hook_en": "Pass by vulgarity with dignity."
+  },
+  {
+   "id": "b6018",
+   "type": "hadith",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الْآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ",
+   "ur": "جو اللہ اور آخرت کے دن پر ایمان رکھتا ہے وہ اچھی بات کہے یا خاموش رہے۔",
+   "en": "Whoever believes in Allah and the Last Day, let him speak good or remain silent.",
+   "ref": "Sahih al-Bukhari 6018 / Sahih Muslim 47",
+   "grade": "Sahih (Bukhari, Muslim)",
+   "hook_ur": "اچھی بات یا خاموشی۔",
+   "hook_en": "Speak good, or stay silent."
+  },
+  {
+   "id": "t1977",
+   "type": "hadith",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "لَيْسَ الْمُؤْمِنُ بِالطَّعَّانِ وَلَا اللَّعَّانِ وَلَا الْفَاحِشِ وَلَا الْبَذِيءِ",
+   "ur": "مومن طعنہ دینے والا، لعنت کرنے والا، بے حیا اور بدزبان نہیں ہوتا۔",
+   "en": "The believer is not a slanderer, a curser, one who is obscene, or foul-mouthed.",
+   "ref": "Jami at-Tirmidhi 1977",
+   "grade": "Sahih (Tirmidhi; graded sahih by al-Albani)",
+   "hook_ur": "مومن بدزبان نہیں ہوتا۔",
+   "hook_en": "A believer is never foul-mouthed."
+  },
+  {
+   "id": "q49-11",
+   "type": "ayah",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "وَلَا تَنَابَزُوا بِالْأَلْقَابِ ۖ بِئْسَ الِاسْمُ الْفُسُوقُ بَعْدَ الْإِيمَانِ",
+   "ur": "اور ایک دوسرے کو برے القاب سے نہ پکارو۔ ایمان کے بعد برا نام رکھنا بہت بری بات ہے۔",
+   "en": "And do not call each other by offensive nicknames. How wretched is the name of disobedience after faith.",
+   "ref": "Surah Al-Hujurat 49:11",
+   "grade": "Qur'an",
+   "hook_ur": "گالی اور برے نام ایمان کے بعد بدترین نام ہیں۔",
+   "hook_en": "Insulting nicknames are wretched after faith."
+  },
+  {
+   "id": "q49-12",
+   "type": "ayah",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "وَلَا يَغْتَب بَّعْضُكُم بَعْضًا ۚ أَيُحِبُّ أَحَدُكُمْ أَن يَأْكُلَ لَحْمَ أَخِيهِ مَيْتًا فَكَرِهْتُمُوهُ",
+   "ur": "اور تم میں سے کوئی دوسرے کی غیبت نہ کرے۔ کیا تم میں سے کوئی پسند کرے گا کہ اپنے مردہ بھائی کا گوشت کھائے؟ تم اسے ناپسند کرتے ہو۔",
+   "en": "And do not backbite one another. Would one of you like to eat the flesh of his dead brother? You would detest it.",
+   "ref": "Surah Al-Hujurat 49:12",
+   "grade": "Qur'an",
+   "hook_ur": "غیبت اور بدگوئی مردہ بھائی کا گوشت کھانا ہے۔",
+   "hook_en": "Backbiting is like eating a brother's flesh."
+  },
+  {
+   "id": "b48",
+   "type": "hadith",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "سِبَابُ الْمُسْلِمِ فُسُوقٌ وَقِتَالُهُ كُفْرٌ",
+   "ur": "مسلمان کو گالی دینا فسق ہے اور اس سے لڑنا کفر ہے۔",
+   "en": "Reviling a Muslim is wickedness (fusuq), and fighting him is disbelief.",
+   "ref": "Sahih al-Bukhari 48 / Sahih Muslim 64",
+   "grade": "Sahih (Bukhari, Muslim)",
+   "hook_ur": "مسلمان کو گالی دینا فسق ہے۔",
+   "hook_en": "Abusing a Muslim is fusuq."
+  },
+  {
+   "id": "b6032",
+   "type": "hadith",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "إِنَّ شَرَّ النَّاسِ مَنْزِلَةً عِنْدَ اللَّهِ مَنْ تَرَكَهُ النَّاسُ اتِّقَاءَ فُحْشِهِ",
+   "ur": "اللہ کے نزدیک سب سے برے مرتبے والا وہ ہے جسے لوگ اس کی بدزبانی کے ڈر سے چھوڑ دیں۔",
+   "en": "The worst of people in rank with Allah is the one whom people leave alone to avoid his foul speech.",
+   "ref": "Sahih al-Bukhari 6032 / Sahih Muslim 2591",
+   "grade": "Sahih (Bukhari, Muslim)",
+   "hook_ur": "لوگ بدزبان سے کنارہ کرتے ہیں۔",
+   "hook_en": "People avoid the foul-mouthed."
+  },
+  {
+   "id": "b6474",
+   "type": "hadith",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "مَنْ يَضْمَنْ لِي مَا بَيْنَ لَحْيَيْهِ وَمَا بَيْنَ رِجْلَيْهِ أَضْمَنْ لَهُ الْجَنَّةَ",
+   "ur": "جو مجھے اپنی زبان اور اپنی شرمگاہ کی ضمانت دے، میں اسے جنت کی ضمانت دیتا ہوں۔",
+   "en": "Whoever guarantees me what is between his jaws and what is between his legs, I guarantee him Paradise.",
+   "ref": "Sahih al-Bukhari 6474",
+   "grade": "Sahih (Bukhari)",
+   "hook_ur": "زبان اور شرمگاہ کی حفاظت پر جنت کی ضمانت۔",
+   "hook_en": "Guard the tongue and chastity; Paradise is guaranteed."
+  },
+  {
+   "id": "t2002",
+   "type": "hadith",
+   "cats": [
+    "tongue"
+   ],
+   "ar": "إِنَّ اللَّهَ يُبْغِضُ الْفَاحِشَ الْبَذِيءَ",
+   "ur": "بے شک اللہ فحش گو اور بدزبان کو ناپسند کرتا ہے۔",
+   "en": "Indeed Allah dislikes the obscene, foul-mouthed person.",
+   "ref": "Jami at-Tirmidhi 2002",
+   "grade": "Tirmidhi (some scholars note a weakness in the chain)",
+   "hook_ur": "اللہ بدزبان کو ناپسند کرتا ہے۔",
+   "hook_en": "Allah dislikes the foul-mouthed."
   }
  ]
 }
