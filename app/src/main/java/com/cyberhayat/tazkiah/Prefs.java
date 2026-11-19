@@ -33,6 +33,20 @@ final class Prefs {
     static String lang(Context c) { return sp(c).getString("lang", "both"); }
     static void setLang(Context c, String v) { sp(c).edit().putString("lang", v).apply(); }
 
+    static boolean notInt(Context c) { return sp(c).getBoolean("notint", true); }
+    static void setNotInt(Context c, boolean v) { sp(c).edit().putBoolean("notint", v).apply(); }
+    static boolean clean(Context c) { return sp(c).getBoolean("clean", true); }
+    static void setClean(Context c, boolean v) { sp(c).edit().putBoolean("clean", v).apply(); }
+    /** how many vulgar posts were skipped per app (counts only) */
+    static synchronized void recordCleaned(Context c, String pkg) {
+        SharedPreferences p = sp(c);
+        try {
+            JSONObject o = new JSONObject(p.getString("cleaned_apps", "{}"));
+            o.put(pkg, o.optInt(pkg, 0) + 1);
+            p.edit().putString("cleaned_apps", o.toString()).apply();
+        } catch (Exception ignored) { }
+    }
+    static String cleanedApps(Context c) { return sp(c).getString("cleaned_apps", "{}"); }
     static boolean visual(Context c) { return sp(c).getBoolean("visual", true); }
     static void setVisual(Context c, boolean v) { sp(c).edit().putBoolean("visual", v).apply(); }
 
@@ -114,7 +128,7 @@ final class Prefs {
             }
             o.put("week", week);
             JSONObject cats = new JSONObject();
-            for (String k : new String[]{"browser", "search", "screen", "visual", "dns", "guard"}) cats.put(k, p.getInt("c_" + k, 0));
+            for (String k : new String[]{"browser", "search", "screen", "visual", "dns", "guard", "vulgar"}) cats.put(k, p.getInt("c_" + k, 0));
             o.put("cats", cats);
             return o.toString();
         } catch (Exception e) { return "{}"; }
@@ -124,7 +138,7 @@ final class Prefs {
         SharedPreferences p = sp(c);
         SharedPreferences.Editor e = p.edit();
         for (String k : p.getAll().keySet())
-            if (k.startsWith("n_") || k.startsWith("c_") || k.equals("total") || k.equals("last_block_ms") || k.equals("istighfar")) e.remove(k);
+            if (k.startsWith("n_") || k.startsWith("c_") || k.equals("total") || k.equals("last_block_ms") || k.equals("istighfar") || k.equals("cleaned_apps")) e.remove(k);
         e.putLong("install_ms", System.currentTimeMillis());
         e.apply();
     }

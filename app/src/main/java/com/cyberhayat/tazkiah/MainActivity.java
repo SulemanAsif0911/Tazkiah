@@ -243,6 +243,8 @@ public class MainActivity extends Activity {
                 o.put("lang", Prefs.lang(MainActivity.this));
                 o.put("guard", Prefs.guard(MainActivity.this));
                 o.put("visual", Prefs.visual(MainActivity.this));
+                o.put("clean", Prefs.clean(MainActivity.this));
+                o.put("notint", Prefs.notInt(MainActivity.this));
                 o.put("daily", Prefs.daily(MainActivity.this));
                 o.put("dailyHour", Prefs.dailyHour(MainActivity.this));
                 o.put("dailyMin", Prefs.dailyMin(MainActivity.this));
@@ -262,6 +264,8 @@ public class MainActivity extends Activity {
                     case "lang": Prefs.setLang(c, value); break;
                     case "guard": Prefs.setGuard(c, "1".equals(value)); break;
                     case "visual": Prefs.setVisual(c, "1".equals(value)); break;
+                    case "clean": Prefs.setClean(c, "1".equals(value)); break;
+                    case "notint": Prefs.setNotInt(c, "1".equals(value)); break;
                     case "daily": Prefs.setDaily(c, "1".equals(value)); ReminderReceiver.schedule(c); break;
                     case "dailyTime": {
                         String[] p = value.split(":");
@@ -280,6 +284,30 @@ public class MainActivity extends Activity {
                     default: break;
                 }
             } catch (Exception ignored) { }
+        }
+
+        /** [{pkg,label,n}] apps whose vulgar posts were skipped, most first. */
+        @JavascriptInterface public String getCleaned() {
+            try {
+                JSONObject o = new JSONObject(Prefs.cleanedApps(MainActivity.this));
+                PackageManager pm = getPackageManager();
+                List<JSONObject> rows = new ArrayList<>();
+                java.util.Iterator<String> it = o.keys();
+                while (it.hasNext()) {
+                    String k = it.next();
+                    String label = k;
+                    try { label = String.valueOf(pm.getApplicationLabel(pm.getApplicationInfo(k, 0))); } catch (Exception ignored) { }
+                    JSONObject r = new JSONObject();
+                    r.put("pkg", k); r.put("label", label); r.put("n", o.optInt(k, 0));
+                    rows.add(r);
+                }
+                Collections.sort(rows, new Comparator<JSONObject>() {
+                    @Override public int compare(JSONObject a, JSONObject b) { return b.optInt("n") - a.optInt("n"); }
+                });
+                JSONArray arr = new JSONArray();
+                for (int i = 0; i < rows.size() && i < 6; i++) arr.put(rows.get(i));
+                return arr.toString();
+            } catch (Exception e) { return "[]"; }
         }
 
         @JavascriptInterface public String getDiag() { return Diag.json(MainActivity.this); }

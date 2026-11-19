@@ -51,6 +51,12 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     private volatile String lastPkg = "";
     private volatile boolean cfgVisual, visualOn, visualBroken;
     private int textStrikes, visualStrikes;
+    // "session record": foul words seen in the current app over the last ~90 s (words only, never page text)
+    private final Set<String> sessTerms = new HashSet<>();
+    private int sessPts;
+    private String sessPkg = "";
+    private long sessLastAt, vulgarCooldownUntil;
+    private final java.util.ArrayDeque<Long> skipTimes = new java.util.ArrayDeque<>();
     private long visualInterval = 2500;
     private VisualGuard vg;
     private HandlerThread bgThread;
@@ -58,7 +64,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     private int lastHash;
     private String lastHashPkg = "";
     // cached settings (refreshed every 3 s, so events never hit SharedPreferences)
-    private volatile boolean cfgProtection = true, cfgGuard;
+    private volatile boolean cfgProtection = true, cfgGuard, cfgClean = true, cfgNotInt = true;
     private volatile String cfgSens = "hyper";
     private long cfgAt;
     private String homePkg = "";
@@ -69,6 +75,8 @@ public class TazkiahAccessibilityService extends AccessibilityService {
     private static final Set<String> ALWAYS_IGNORED = new HashSet<>();
     private static final Set<String> SETTINGS_PKGS = new HashSet<>();
     private static final Map<String, String[]> URL_BARS = new HashMap<>();
+    /** feed / short-video apps where a vulgar post is skipped (chat apps are never auto-scrolled) */
+    private static final Set<String> FEED_APPS = new HashSet<>();
     static {
         ALWAYS_IGNORED.add("com.android.systemui");
         ALWAYS_IGNORED.add("android");
@@ -78,6 +86,11 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         ALWAYS_IGNORED.add("com.samsung.android.packageinstaller");
         ALWAYS_IGNORED.add("com.miui.packageinstaller");
         SETTINGS_PKGS.addAll(ALWAYS_IGNORED);
+        for (String f : new String[]{"com.instagram.android", "com.instagram.lite", "com.instagram.barcelona",
+                "com.facebook.katana", "com.facebook.lite", "com.zhiliaoapp.musically", "com.ss.android.ugc.trill",
+                "com.google.android.youtube", "com.snapchat.android", "com.twitter.android", "com.reddit.frontpage",
+                "com.kwai.video", "com.lemon.lvoverseas", "video.like", "in.mohalla.sharechat", "com.vanced.android.youtube",
+                "app.revanced.android.youtube", "com.pinterest", "com.tumblr", "com.facebook.mlite"}) FEED_APPS.add(f);
         URL_BARS.put("com.android.chrome", new String[]{"com.android.chrome:id/url_bar"});
         URL_BARS.put("com.chrome.beta", new String[]{"com.chrome.beta:id/url_bar"});
         URL_BARS.put("org.mozilla.firefox", new String[]{"org.mozilla.firefox:id/mozac_browser_toolbar_url_view", "org.mozilla.firefox:id/url_bar_title"});
@@ -162,6 +175,8 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         cfgGuard = Prefs.guard(this);
         cfgSens = Prefs.sensitivity(this);
         cfgVisual = Prefs.visual(this);
+        cfgClean = Prefs.clean(this);
+        cfgNotInt = Prefs.notInt(this);
     }
 
     private void reloadTrusted() {
@@ -306,9 +321,169 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             } else {
                 textStrikes = 0;
             }
+            if (cfgClean && FEED_APPS.contains(pkg)) vulgarCheck(pkg, text);
         } finally {
             try { root.recycle(); } catch (Exception ignored) { }
         }
+    }
+
+    // ------------------------------------------------------------------ clean feed (vulgar / foul language)
+    /** Background thread. Adds this screen's foul words to the session; skips the post when it is too much. */
+    private void vulgarCheck(String pkg, String text) {
+        long now = SystemClock.elapsedRealtime();
+        if (!pkg.equals(sessPkg) || now - sessLastAt > 90000) { sessTerms.clear(); sessPts = 0; sessPkg = pkg; }
+        sessLastAt = now;
+        List<Blocklist.Term> hits = Blocklist.vulgarHits(text);
+        int cur = 0; String first = "";
+        for (Blocklist.Term t : hits) {
+            cur += t.pts;
+            if (first.isEmpty() || t.pts > 1) first = t.t;
+            if (sessTerms.add(t.t)) sessPts += t.pts;
+        }
+        Diag.sessApp = pkg; Diag.sessPts = sessPts;
+        if (now < vulgarCooldownUntil) return;
+        // gentle: only a lot; balanced: one strong word or two mild; strict/hyper: same, session adds up sooner
+        int curThr = "gentle".equals(cfgSens) ? 4 : 2;
+        int sessThr = hyper() ? 3 : "strict".equals(cfgSens) ? 4 : 5;
+        if (cur >= curThr || sessPts >= sessThr) {
+            String why = "vulgar: " + first + " (" + (cur >= curThr ? cur : sessPts) + ")";
+            sessTerms.clear(); sessPts = 0;
+            cleanPost(pkg, why);
+        }
+    }
+
+    private void cleanPost(final String pkg, final String why) {
+        long now = SystemClock.elapsedRealtime();
+        vulgarCooldownUntil = now + 4000;
+        lastHash = 0;
+        Diag.lastReason = why;
+        Prefs.recordBlock(this, "vulgar");
+        Prefs.recordCleaned(this, pkg);
+        Diag.log("vulgar: " + why, pkg);
+        skipTimes.addLast(now);
+        while (!skipTimes.isEmpty() && now - skipTimes.peekFirst() > 60000) skipTimes.pollFirst();
+        if (skipTimes.size() >= 3) {
+            // the whole feed is full of it: stop and remind, instead of scrolling forever
+            skipTimes.clear();
+            h.post(new Runnable() { @Override public void run() {
+                if (overlay == null) showOverlay(false, Reminder.pickTongue(TazkiahAccessibilityService.this));
+            } });
+            return;
+        }
+        if (cfgNotInt && pkg.startsWith("com.instagram.")) {
+            // teach Instagram: tap "More" -> "Not interested" (only when exactly one unambiguous "More" is visible)
+            try { if (tapNotInterested()) { Diag.notInt++; Diag.log("not interested sent", pkg); try { Thread.sleep(500); } catch (InterruptedException ignored) { } } } catch (Throwable ignored) { }
+        }
+        final boolean moved = scrollForward();
+        if (moved) Diag.skipped++;
+        h.post(new Runnable() { @Override public void run() {
+            if (moved) {
+                try { android.widget.Toast.makeText(TazkiahAccessibilityService.this, "Behooda content skip kiya", android.widget.Toast.LENGTH_SHORT).show(); } catch (Throwable ignored) { }
+            } else if (overlay == null) {
+                showOverlay(false, Reminder.pickTongue(TazkiahAccessibilityService.this));
+            }
+        } });
+    }
+
+    private static final String[] MORE_LABELS = {"more", "more options", "options"};
+
+    private boolean tapNotInterested() {
+        AccessibilityNodeInfo root = getRootInActiveWindow();
+        if (root == null) return false;
+        AccessibilityNodeInfo more = null;
+        try {
+            List<AccessibilityNodeInfo> found = new java.util.ArrayList<>();
+            findLabelled(root, MORE_LABELS, false, found, 0);
+            if (found.size() != 1) { recycleAll(found); return false; } // none or several posts on screen: do not guess
+            more = found.get(0);
+            if (!clickUp(more)) return false;
+        } finally {
+            try { root.recycle(); } catch (Exception ignored) { }
+            if (more != null) try { more.recycle(); } catch (Exception ignored) { }
+        }
+        try { Thread.sleep(750); } catch (InterruptedException ignored) { }
+        AccessibilityNodeInfo r2 = getRootInActiveWindow();
+        if (r2 == null) return false;
+        List<AccessibilityNodeInfo> ni = new java.util.ArrayList<>();
+        boolean ok = false;
+        try {
+            findLabelled(r2, new String[]{"not interested"}, true, ni, 0);
+            if (!ni.isEmpty()) ok = clickUp(ni.get(0));
+        } finally {
+            recycleAll(ni);
+            try { r2.recycle(); } catch (Exception ignored) { }
+        }
+        if (!ok) performGlobalAction(GLOBAL_ACTION_BACK); // close the menu we opened
+        return ok;
+    }
+
+    /** Collect visible nodes whose text or description equals a label (prefix = startsWith). */
+    private void findLabelled(AccessibilityNodeInfo n, String[] labels, boolean prefix, List<AccessibilityNodeInfo> out, int depth) {
+        if (n == null || depth > 40 || out.size() > 4) return;
+        if (n.isVisibleToUser()) {
+            CharSequence t = n.getText(), cd = n.getContentDescription();
+            for (String l : labels) {
+                if (matchLabel(t, l, prefix) || matchLabel(cd, l, prefix)) { out.add(AccessibilityNodeInfo.obtain(n)); break; }
+            }
+        }
+        int kids = n.getChildCount();
+        for (int i = 0; i < kids; i++) {
+            AccessibilityNodeInfo c = n.getChild(i);
+            if (c == null) continue;
+            findLabelled(c, labels, prefix, out, depth + 1);
+            try { c.recycle(); } catch (Exception ignored) { }
+        }
+    }
+
+    private static boolean matchLabel(CharSequence cs, String label, boolean prefix) {
+        if (cs == null) return false;
+        String s = cs.toString().trim().toLowerCase(java.util.Locale.ROOT);
+        return prefix ? s.startsWith(label) : s.equals(label);
+    }
+
+    private boolean clickUp(AccessibilityNodeInfo n) {
+        AccessibilityNodeInfo cur = AccessibilityNodeInfo.obtain(n);
+        for (int i = 0; i < 4 && cur != null; i++) {
+            if (cur.isClickable() && cur.performAction(AccessibilityNodeInfo.ACTION_CLICK)) { try { cur.recycle(); } catch (Exception ignored) { } return true; }
+            AccessibilityNodeInfo p = cur.getParent();
+            try { cur.recycle(); } catch (Exception ignored) { }
+            cur = p;
+        }
+        if (cur != null) try { cur.recycle(); } catch (Exception ignored) { }
+        return false;
+    }
+
+    private static void recycleAll(List<AccessibilityNodeInfo> l) {
+        for (AccessibilityNodeInfo x : l) try { x.recycle(); } catch (Exception ignored) { }
+    }
+
+    /** Scroll the main scrollable view of the app forward = next reel / next post. */
+    private boolean scrollForward() {
+        AccessibilityNodeInfo root = getRootInActiveWindow();
+        if (root == null) return false;
+        try {
+            AccessibilityNodeInfo best = findScrollable(root, 0);
+            if (best == null) return false;
+            boolean ok = best.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+            try { best.recycle(); } catch (Exception ignored) { }
+            return ok;
+        } finally {
+            try { root.recycle(); } catch (Exception ignored) { }
+        }
+    }
+
+    private AccessibilityNodeInfo findScrollable(AccessibilityNodeInfo n, int depth) {
+        if (n == null || depth > 25) return null;
+        if (n.isScrollable() && n.isVisibleToUser()) return AccessibilityNodeInfo.obtain(n);
+        int kids = n.getChildCount();
+        for (int i = 0; i < kids; i++) {
+            AccessibilityNodeInfo c = n.getChild(i);
+            if (c == null) continue;
+            AccessibilityNodeInfo r = findScrollable(c, depth + 1);
+            try { c.recycle(); } catch (Exception ignored) { }
+            if (r != null) return r;
+        }
+        return null;
     }
 
     /** Fallback when the active window has no readable root: look at every visible window. */
@@ -391,6 +566,7 @@ public class TazkiahAccessibilityService extends AccessibilityService {
             @Override public void run() {
                 if (overlay != null || SystemClock.elapsedRealtime() < cooldownUntil) return;
                 Diag.triggers++;
+                Diag.log(cat + ": " + Diag.lastReason, lastPkg);
                 Prefs.recordBlock(TazkiahAccessibilityService.this, cat);
                 showOverlay(false, Reminder.pick(TazkiahAccessibilityService.this, false));
             }
@@ -472,8 +648,8 @@ public class TazkiahAccessibilityService extends AccessibilityService {
         Diag.lastVisScore = sc;
         float ex = vg.lastExplicit, sg = vg.lastSuggest;
         float exHi = hy ? 0.40f : gentle ? 0.75f : strict ? 0.55f : 0.65f;
-        float exLo = hy ? 0.28f : gentle ? 0.75f : strict ? 0.35f : 0.45f;
-        float sgHi = hy ? 0.55f : strict ? 0.65f : 2f; // suggestive (bare midriff/armpits on a woman) only in hyper/strict
+        float exLo = hy ? 0.33f : gentle ? 0.75f : strict ? 0.35f : 0.45f;
+        float sgHi = hy ? 0.66f : strict ? 0.72f : 2f; // suggestive (bare midriff/armpits on a woman) only in hyper/strict
         if (ex >= exHi) { visualStrikes = 0; Diag.lastReason = "image: exposed " + Math.round(ex * 100) + "%"; trigger("visual"); }
         else if (ex >= exLo || sg >= sgHi) {
             if (++visualStrikes >= 2) { visualStrikes = 0; Diag.lastReason = ex >= exLo ? "image: likely exposed " + Math.round(ex * 100) + "%" : "image: bare skin " + Math.round(sg * 100) + "%"; trigger("visual"); }

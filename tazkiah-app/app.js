@@ -29,7 +29,7 @@
   /* ------------------------------------------------------------ data */
   function load() {
     S.status = json('getStatus', {}) || {};
-    S.set = json('getSettings', { protection: true, sensitivity: 'hyper', lang: 'both', guard: false, visual: true, daily: true, dailyHour: 21, dailyMin: 0, custom: '', trusted: [] }) || {};
+    S.set = json('getSettings', { protection: true, sensitivity: 'hyper', lang: 'both', guard: false, visual: true, clean: true, daily: true, dailyHour: 21, dailyMin: 0, custom: '', trusted: [] }) || {};
     S.stats = json('getStats', { today: 0, total: 0, streak: 0, istighfar: 0, week: [], cats: {} }) || {};
     if (!S.rem.length) {
       var r = json('getReminders', { items: [] });
@@ -105,7 +105,7 @@
     $('#tab-home').innerHTML = h;
   }
 
-  var FILTERS = [['all', 'All'], ['ayah', "Qur'an"], ['hadith', 'Hadith'], ['gaze', 'Gaze'], ['allah_sees', 'Allah sees'], ['hereafter', 'Hereafter'], ['shame', 'Haya'], ['fitna', 'Temptation'], ['heart', 'Heart'], ['tawbah', 'Tawbah'], ['remedy', 'Remedy']];
+  var FILTERS = [['all', 'All'], ['ayah', "Qur'an"], ['hadith', 'Hadith'], ['gaze', 'Gaze'], ['allah_sees', 'Allah sees'], ['hereafter', 'Hereafter'], ['shame', 'Haya'], ['fitna', 'Temptation'], ['heart', 'Heart'], ['tawbah', 'Tawbah'], ['remedy', 'Remedy'], ['tongue', 'Tongue']];
   function renderReminders() {
     var f = S.filter;
     var list = S.rem.filter(function (r) { return f === 'all' || r.type === f || r.cats.indexOf(f) >= 0; });
@@ -128,6 +128,8 @@
     h += '<div style="margin-top:6px"><h4 style="margin:12px 0 0;font:600 14.5px var(--f-ui)">Sensitivity</h4><div class="seg">' + ['hyper', 'strict', 'balanced', 'gentle'].map(function (k) { return '<button class="' + (s.sensitivity === k ? 'on' : '') + '" data-a="sens" data-v="' + k + '">' + k[0].toUpperCase() + k.slice(1) + '</button>'; }).join('') + '</div><p class="muted small" style="margin:8px 2px 0">' + SENS[s.sensitivity] + '</p></div></div>';
     var vis = (S.status.sdk || 30) >= 30;
     h += '<div class="card"><div class="set"><div class="t"><h4>Image guard</h4><p>' + (vis ? 'Looks at what is on screen (photos, reels, videos) with a small on-device model and blocks exposed bodies. Nothing is saved or sent.' : 'Needs Android 11 or newer. Not available on this phone.') + '</p></div>' + (vis ? sw(s.visual, 'tog-visual') : '') + '</div></div>';
+    h += '<div class="card"><div class="set"><div class="t"><h4>Clean feed</h4><p>If a reel or post in Instagram, Facebook, TikTok, YouTube, Snapchat, X or Reddit shows gaaliyan or vulgar talk, it is skipped to the next one. Foul words in the captions and comments it keeps seeing add up over the session.</p></div>' + sw(s.clean !== false, 'tog-clean') + '</div></div>';
+    h += '<div class="card"><div class="set"><div class="t"><h4>Teach Instagram (Not interested)</h4><p>When a vulgar post is skipped on Instagram, the app also taps ⋮ → Not interested, so your feed improves over time. Works only when Instagram is in English and one post is on screen.</p></div>' + sw(s.notint !== false, 'tog-notint') + '</div></div>';
     h += '<div class="card" id="diag"><h4 style="margin:0 0 6px;font:600 14.5px var(--f-ui)">Live status</h4><div id="diagBody" class="muted small">Loading…</div><div class="actions" style="justify-content:flex-start"><button class="btn ghost sm" data-a="diag">Refresh</button><button class="btn sm" data-a="selftest">Run self-test</button></div></div>';
     h += '<div class="card"><div class="set"><div class="t"><h4>Think-twice guard</h4><p>If you try to switch the app off or uninstall it, a reminder and a 20-second pause appear first.</p></div>' + sw(s.guard, 'tog-guard') + '</div></div>';
     h += '<div class="card"><div class="row"><div class="grow"><h4 style="margin:0;font:600 14.5px var(--f-ui)">Trusted apps</h4><p class="muted small" style="margin:2px 0 0">' + (nTrusted ? nTrusted + ' app' + (nTrusted > 1 ? 's' : '') + ' are never scanned (e.g. a Qur\'an or study app).' : 'Pick apps that should never be scanned, like a Qur\'an or study app.') + '</p></div><button class="btn ghost sm" data-a="apps">Choose</button></div></div>';
@@ -146,9 +148,9 @@
       [['both', 'Urdu + English'], ['ur', 'Urdu'], ['en', 'English']].map(function (x) { return '<button class="' + (s.lang === x[0] ? 'on' : '') + '" data-a="lang" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>' +
       '<div class="set" style="margin-top:12px"><div class="t"><h4>Daily reminder</h4><p>A notification with one ayah or hadith.</p></div>' + sw(s.daily, 'tog-daily') + '</div>' +
       '<div class="set"><div class="t"><h4>Time</h4></div><input type="time" id="dtime" value="' + pad2(s.dailyHour || 0) + ':' + pad2(s.dailyMin || 0) + '"></div></div>';
-    h += '<h2>Where blocks came from</h2><div class="card"><div class="stats" style="margin:0;grid-template-columns:repeat(5,1fr)">' +
-      [['browser', 'Sites'], ['search', 'Searches'], ['screen', 'Text'], ['visual', 'Images'], ['dns', 'DNS']].map(function (x) { return '<div class="stat" style="padding:10px 4px"><b style="font-size:19px">' + (c[x[0]] || 0) + '</b><span>' + x[1] + '</span></div>'; }).join('') +
-      '</div><div class="actions" style="justify-content:flex-start"><button class="btn line sm" data-a="reset">Reset counters</button></div></div>';
+    h += '<h2>Where blocks came from</h2><div class="card"><div class="stats" style="margin:0;grid-template-columns:repeat(6,1fr)">' +
+      [['browser', 'Sites'], ['search', 'Searches'], ['screen', 'Text'], ['visual', 'Images'], ['vulgar', 'Vulgar'], ['dns', 'DNS']].map(function (x) { return '<div class="stat" style="padding:10px 4px"><b style="font-size:19px">' + (c[x[0]] || 0) + '</b><span>' + x[1] + '</span></div>'; }).join('') +
+      '</div>' + cleanedHtml() + '<div class="actions" style="justify-content:flex-start"><button class="btn line sm" data-a="reset">Reset counters</button></div></div>';
     h += '<h2>How it works &amp; privacy</h2><div class="card"><ul class="ul" style="margin-top:0">' +
       '<li><b>Guard:</b> reads on-screen text on your phone to score it against a keyword list. The text is not saved or sent anywhere. Password fields are skipped.</li><li><b>Image guard:</b> a small AI model on your phone checks screenshots for exposed body parts. Pictures are never stored or sent. It cannot catch everything, such as clothed but suggestive clips.</li>' +
       '<li><b>DNS Shield:</b> a local filter that sees website <i>names</i> only (never pages, passwords or messages). Unblocked names go to Cloudflare Family DNS (1.1.1.3). Nothing is logged.</li>' +
@@ -228,6 +230,8 @@
         if (r && call('previewOverlay', r.id) !== true) openSheet(previewHtml(r));
         break;
       case 'tog-protection': S.set.protection = !S.set.protection; setting('protection', S.set.protection ? 1 : 0); render(); break;
+      case 'tog-notint': S.set.notint = !(S.set.notint !== false); setting('notint', S.set.notint ? 1 : 0); render(); break;
+      case 'tog-clean': S.set.clean = !(S.set.clean !== false); setting('clean', S.set.clean ? 1 : 0); render(); break;
       case 'tog-visual': S.set.visual = !S.set.visual; setting('visual', S.set.visual ? 1 : 0); render(); break;
       case 'tog-guard': S.set.guard = !S.set.guard; setting('guard', S.set.guard ? 1 : 0); render(); break;
       case 'tog-daily': S.set.daily = !S.set.daily; setting('daily', S.set.daily ? 1 : 0); render(); break;
@@ -258,6 +262,11 @@
     if (e.target.id === 'dtime' && e.target.value) { setting('dailyTime', e.target.value); var p = e.target.value.split(':'); S.set.dailyHour = +p[0]; S.set.dailyMin = +p[1]; toast('Reminder time saved'); }
   });
 
+  function cleanedHtml() {
+    var r = json('getCleaned', []);
+    if (!r || !r.length) return '';
+    return '<h4 style="margin:14px 0 4px;font:600 13.5px var(--f-ui)">Vulgar posts skipped in</h4>' + r.map(function (x) { return '<div class="small muted">• ' + esc(x.label) + ' — ' + x.n + '</div>'; }).join('');
+  }
   function ago(v) { return v < 0 ? 'never' : v + 's ago'; }
   function diag() {
     var b = $('#diagBody'); if (!b) return;
@@ -272,7 +281,7 @@
       '<div>Text scans: ' + d.scans + ' (last ' + ago(d.scanAgo) + ', score ' + d.scanScore + ')</div>' +
       '<div>Image guard: ' + esc(vis) + esc(hint) + '</div>' +
       (d.modelError ? '<div>Model error: ' + esc(d.modelError) + '</div>' : '') +
-      '<div>Blocks shown: ' + d.triggers + (d.reason ? '<br>Last block: <b>' + esc(d.reason) + '</b>' : '') + '</div>';
+      '<div>Session: ' + esc(d.sessApp || '-') + ' · foul score ' + (d.sessPts || 0) + ' · posts skipped ' + (d.skipped || 0) + ' · not-interested ' + (d.notInt || 0) + '</div><div>Blocks shown: ' + d.triggers + '</div>' + (d.log && d.log.length ? '<div style="margin-top:6px">Recent blocks (send me these if one was wrong):</div>' + d.log.map(function (x) { return '<div style="font-size:11.5px;word-break:break-word">• ' + esc(x) + '</div>'; }).join('') : '');
   }
   function selfTest() {
     var b = $('#diagBody'); if (b) b.textContent = 'Running self-test…';

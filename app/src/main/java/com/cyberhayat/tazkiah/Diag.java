@@ -13,9 +13,19 @@ final class Diag {
     private Diag() {}
 
     static volatile long events, eventsAt, scans, scansAt, visScans, visAt, triggers;
-    static volatile int lastScanScore = -1, lastShotError = 0;
+    static volatile int lastScanScore = -1, lastShotError = 0, sessPts = 0, skipped = 0, notInt = 0;
+    static volatile String sessApp = "";
     static volatile float lastVisScore = -1f;
     static volatile String visState = "idle", lastScanPkg = "", lastReason = "";
+
+    private static final java.util.ArrayList<String> LOG = new java.util.ArrayList<>();
+    /** Keeps the last few block reasons (keyword/score/app only, never page content). */
+    static synchronized void log(String reason, String pkg) {
+        java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US);
+        LOG.add(0, f.format(new java.util.Date()) + " · " + pkg + " · " + reason);
+        while (LOG.size() > 8) LOG.remove(LOG.size() - 1);
+    }
+    static synchronized org.json.JSONArray logJson() { return new org.json.JSONArray(LOG); }
 
     static String json(Context c) {
         try {
@@ -38,7 +48,9 @@ final class Diag {
             o.put("modelError", VisualGuard.lastError);
             o.put("inferMs", VisualGuard.lastInferMs);
             o.put("triggers", triggers);
+            o.put("sessApp", sessApp); o.put("sessPts", sessPts); o.put("skipped", skipped); o.put("notInt", notInt);
             o.put("reason", lastReason);
+            o.put("log", logJson());
             return o.toString();
         } catch (Exception e) { return "{}"; }
     }
