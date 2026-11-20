@@ -15,6 +15,7 @@ import java.util.Random;
 final class Reminder {
     String id, type, ar, ur, en, ref, hookUr, hookEn;
     boolean hope; // tawbah / mercy item
+    boolean tongue; // about speech / vulgar talk
 
     private static volatile List<Reminder> all;
     private static String lastId = "";
@@ -38,7 +39,7 @@ final class Reminder {
                 r.ar = o.optString("ar"); r.ur = o.optString("ur"); r.en = o.optString("en");
                 r.ref = o.optString("ref"); r.hookUr = o.optString("hook_ur"); r.hookEn = o.optString("hook_en");
                 JSONArray cats = o.optJSONArray("cats");
-                for (int k = 0; cats != null && k < cats.length(); k++) if ("tawbah".equals(cats.getString(k))) r.hope = true;
+                for (int k = 0; cats != null && k < cats.length(); k++) { if ("tawbah".equals(cats.getString(k))) r.hope = true; if ("tongue".equals(cats.getString(k))) r.tongue = true; }
                 out.add(r);
             }
         } catch (Exception ignored) { }
@@ -54,9 +55,19 @@ final class Reminder {
     /** hope=false -> deterrent reminders (gaze, Allah sees, hereafter...). hope=true -> tawbah / mercy ones. */
     static synchronized Reminder pick(Context c, boolean hope) {
         List<Reminder> pool = new ArrayList<>();
-        for (Reminder r : all(c)) if (r.hope == hope && !r.id.equals(lastId)) pool.add(r);
+        for (Reminder r : all(c)) if (r.hope == hope && !r.tongue && !r.id.equals(lastId)) pool.add(r);
         if (pool.isEmpty()) pool = all(c);
         if (pool.isEmpty()) return fallback();
+        Reminder r = pool.get(RND.nextInt(pool.size()));
+        lastId = r.id;
+        return r;
+    }
+
+    /** Reminders about the tongue and vulgar talk. */
+    static synchronized Reminder pickTongue(Context c) {
+        List<Reminder> pool = new ArrayList<>();
+        for (Reminder r : all(c)) if (r.tongue && !r.id.equals(lastId)) pool.add(r);
+        if (pool.isEmpty()) return pick(c, false);
         Reminder r = pool.get(RND.nextInt(pool.size()));
         lastId = r.id;
         return r;
